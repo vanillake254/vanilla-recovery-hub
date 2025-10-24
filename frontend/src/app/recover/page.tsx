@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { Suspense, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import axios from 'axios';
 import toast from 'react-hot-toast';
@@ -10,7 +10,7 @@ import { FiAlertCircle, FiCheck } from 'react-icons/fi';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
-export default function RecoverPage() {
+function RecoverPageContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const tier = searchParams.get('tier') || 'basic';
@@ -302,5 +302,26 @@ export default function RecoverPage() {
 
       <Footer />
     </main>
+  );
+}
+
+export default function RecoverPage() {
+  return (
+    <Suspense fallback={
+      <main className="min-h-screen bg-gray-50">
+        <Navbar />
+        <div className="pt-24 pb-20 px-4">
+          <div className="container mx-auto max-w-4xl">
+            <div className="text-center py-20">
+              <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-primary-600 mx-auto"></div>
+              <p className="mt-4 text-gray-600">Loading...</p>
+            </div>
+          </div>
+        </div>
+        <Footer />
+      </main>
+    }>
+      <RecoverPageContent />
+    </Suspense>
   );
 }

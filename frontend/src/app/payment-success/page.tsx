@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import axios from 'axios';
@@ -10,7 +10,7 @@ import { FiCheckCircle, FiMail, FiMessageCircle } from 'react-icons/fi';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
-export default function PaymentSuccessPage() {
+function PaymentSuccessContent() {
   const searchParams = useSearchParams();
   const tx_ref = searchParams.get('tx_ref');
   const [verified, setVerified] = useState(false);
@@ -36,7 +36,7 @@ export default function PaymentSuccessPage() {
   };
 
   return (
-    <main className="min-h-screen bg-gray-50">
+    <>
       <Navbar />
       
       <div className="pt-24 pb-20 px-4">
@@ -167,6 +167,29 @@ export default function PaymentSuccessPage() {
       </div>
 
       <Footer />
-    </main>
+    </>
+  );
+}
+
+export default function PaymentSuccessPage() {
+  return (
+    <Suspense fallback={
+      <main className="min-h-screen bg-gray-50">
+        <Navbar />
+        <div className="pt-24 pb-20 px-4">
+          <div className="container mx-auto max-w-2xl">
+            <div className="text-center py-20">
+              <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-primary-600 mx-auto"></div>
+              <p className="mt-4 text-gray-600">Loading...</p>
+            </div>
+          </div>
+        </div>
+        <Footer />
+      </main>
+    }>
+      <main className="min-h-screen bg-gray-50">
+        <PaymentSuccessContent />
+      </main>
+    </Suspense>
   );
 }
