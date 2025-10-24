@@ -73,24 +73,68 @@ class ChatbotService {
 
     const normalizedMessage = message.toLowerCase().trim();
 
-    // Get intent classification
-    const classifications = this.classifier.getClassifications(normalizedMessage);
-    const topClassification = classifications[0];
-    const confidence = topClassification.value;
-    const intentName = topClassification.label;
+    // First try direct pattern matching (more reliable)
+    let matchedIntent = null;
+    let matchConfidence = 0;
 
-    logger.debug('Intent classified:', { intentName, confidence });
+    for (const intent of this.intents) {
+      for (const pattern of intent.patterns) {
+        const patternLower = pattern.toLowerCase();
+        
+        // Exact match
+        if (normalizedMessage === patternLower) {
+          matchedIntent = intent;
+          matchConfidence = 1.0;
+          break;
+        }
+        
+        // Contains match
+        if (normalizedMessage.includes(patternLower) || patternLower.includes(normalizedMessage)) {
+          if (matchConfidence < 0.8) {
+            matchedIntent = intent;
+            matchConfidence = 0.8;
+          }
+        }
+        
+        // Word overlap match
+        const messageWords = normalizedMessage.split(/\s+/);
+        const patternWords = patternLower.split(/\s+/);
+        const overlap = messageWords.filter(w => patternWords.includes(w)).length;
+        const similarity = overlap / Math.max(messageWords.length, patternWords.length);
+        
+        if (similarity > matchConfidence && similarity > 0.5) {
+          matchedIntent = intent;
+          matchConfidence = similarity;
+        }
+      }
+      if (matchConfidence >= 1.0) break;
+    }
 
-    // Find the matched intent
-    const intent = this.intents.find(i => i.name === intentName);
+    // Fallback to Bayes classifier if no direct match
+    if (!matchedIntent || matchConfidence < 0.5) {
+      const classifications = this.classifier.getClassifications(normalizedMessage);
+      const topClassification = classifications[0];
+      const bayesConfidence = topClassification.value;
+      const intentName = topClassification.label;
+      
+      if (bayesConfidence > matchConfidence) {
+        matchedIntent = this.intents.find(i => i.name === intentName);
+        matchConfidence = bayesConfidence;
+      }
+    }
+
+    logger.debug('Intent matched:', { 
+      intent: matchedIntent?.name || 'unknown', 
+      confidence: matchConfidence 
+    });
 
     // Handle low confidence or no match
-    if (confidence < 0.2 || !intent) {
+    if (matchConfidence < 0.5 || !matchedIntent) {
       return {
         reply: "I'm not quite sure I understood that. Could you rephrase your question, or would you like to speak with a human support agent?",
         intent: 'unknown',
-        confidence,
-        shouldEscalate: confidence < 0.15,
+        confidence: matchConfidence,
+        shouldEscalate: matchConfidence < 0.3,
         requiresPayment: false,
         suggestions: [
           "How can I recover my hacked account?",
@@ -100,12 +144,14 @@ class ChatbotService {
       };
     }
 
+    const intent = matchedIntent;
+
     // Check for escalation intent
     if (intent.escalate) {
       return {
         reply: "I understand you need additional help. Let me connect you with our support team. They'll respond shortly.",
-        intent: intentName,
-        confidence,
+        intent: intent.name,
+        confidence: matchConfidence,
         shouldEscalate: true,
         requiresPayment: false
       };
@@ -115,8 +161,8 @@ class ChatbotService {
     if (intent.requires_payment && context?.paymentStatus !== 'paid') {
       return {
         reply: this.getPaymentRequiredResponse(intent),
-        intent: intentName,
-        confidence,
+        intent: intent.name,
+        confidence: matchConfidence,
         shouldEscalate: false,
         requiresPayment: true
       };
@@ -127,11 +173,11 @@ class ChatbotService {
 
     return {
       reply: response,
-      intent: intentName,
-      confidence,
+      intent: intent.name,
+      confidence: matchConfidence,
       shouldEscalate: false,
       requiresPayment: intent.requires_payment || false,
-      suggestions: this.getSuggestions(intentName)
+      suggestions: this.getSuggestions(intent.name)
     };
   }
 
