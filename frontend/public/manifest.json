@@ -1,0 +1,41 @@
+{
+  "name": "Vanilla Recovery Hub - Professional Account Recovery",
+  "short_name": "Vanilla Recovery",
+  "description": "Recover your hacked or locked social media and email accounts professionally. Instagram, Facebook, Gmail, TikTok & more. 85% success rate.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#7C3AED",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/logo.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/favicon.svg",
+      "sizes": "32x32",
+      "type": "image/svg+xml"
+    }
+  ],
+  "categories": ["utilities", "security", "productivity"],
+  "screenshots": [],
+  "shortcuts": [
+    {
+      "name": "Start Recovery",
+      "short_name": "Recover",
+      "description": "Start account recovery process",
+      "url": "/recover",
+      "icons": [{ "src": "/logo.svg", "sizes": "96x96" }]
+    },
+    {
+      "name": "Admin Login",
+      "short_name": "Admin",
+      "description": "Access admin dashboard",
+      "url": "/admin/login",
+      "icons": [{ "src": "/logo.svg", "sizes": "96x96" }]
+    }
+  ]
+}
