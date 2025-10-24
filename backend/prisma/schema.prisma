@@ -1,0 +1,160 @@
+// Prisma Schema for Vanilla Recovery Hub
+// PostgreSQL Database
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// User Model
+model User {
+  id        String   @id @default(cuid())
+  name      String   @db.VarChar(100)
+  email     String   @unique @db.VarChar(255)
+  phone     String   @db.VarChar(20)
+  role      Role     @default(USER)
+  metadata  Json?    @default("{}")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  requests  Request[]
+  chatLogs  ChatLog[]
+  notes     Note[]
+
+  @@index([email])
+  @@index([phone])
+  @@map("users")
+}
+
+// Request Model
+model Request {
+  id            String        @id @default(cuid())
+  userId        String
+  platform      Platform
+  description   String        @db.Text
+  hasEmailAccess Boolean?
+  status        RequestStatus @default(NEW)
+  txRef         String        @unique @db.VarChar(255)
+  paymentStatus PaymentStatus @default(PENDING)
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  // Relations
+  user          User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  payment       Payment?
+  chatLogs      ChatLog[]
+  notes         Note[]
+
+  @@index([userId, createdAt(sort: Desc)])
+  @@index([paymentStatus, status])
+  @@index([platform, createdAt(sort: Desc)])
+  @@index([txRef])
+  @@map("requests")
+}
+
+// Payment Model
+model Payment {
+  id              String        @id @default(cuid())
+  requestId       String        @unique
+  txRef           String        @unique @db.VarChar(255)
+  amount          Float
+  currency        String        @default("KES") @db.VarChar(3)
+  status          PaymentStatus @default(PENDING)
+  gatewayResponse Json?         @default("{}")
+  flwRef          String?       @db.VarChar(255)
+  transactionId   String?       @db.VarChar(255)
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  // Relations
+  request         Request       @relation(fields: [requestId], references: [id], onDelete: Cascade)
+
+  @@index([requestId, status])
+  @@index([txRef])
+  @@index([flwRef])
+  @@index([transactionId])
+  @@index([createdAt(sort: Desc)])
+  @@map("payments")
+}
+
+// ChatLog Model
+model ChatLog {
+  id        String     @id @default(cuid())
+  sessionId String     @unique @db.VarChar(255)
+  requestId String?
+  userId    String?
+  messages  Json       @default("[]")
+  status    ChatStatus @default(ACTIVE)
+  context   Json?      @default("{}")
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+
+  // Relations
+  request   Request?   @relation(fields: [requestId], references: [id], onDelete: SetNull)
+  user      User?      @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([sessionId, createdAt(sort: Desc)])
+  @@index([status, updatedAt(sort: Desc)])
+  @@index([requestId])
+  @@index([userId])
+  @@map("chat_logs")
+}
+
+// Note Model (for request notes/comments)
+model Note {
+  id        String   @id @default(cuid())
+  requestId String
+  userId    String
+  text      String   @db.Text
+  createdAt DateTime @default(now())
+
+  // Relations
+  request   Request  @relation(fields: [requestId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([requestId, createdAt(sort: Desc)])
+  @@map("notes")
+}
+
+// Enums
+enum Role {
+  USER
+  ADMIN
+}
+
+enum Platform {
+  FACEBOOK
+  INSTAGRAM
+  GMAIL
+  TIKTOK
+  YOUTUBE
+  TWITTER
+  WHATSAPP
+  OTHER
+}
+
+enum RequestStatus {
+  NEW
+  IN_PROGRESS
+  RESOLVED
+  FAILED
+}
+
+enum PaymentStatus {
+  PENDING
+  PAID
+  SUCCESSFUL
+  FAILED
+}
+
+enum ChatStatus {
+  ACTIVE
+  ESCALATED
+  RESOLVED
+  ABANDONED
+}

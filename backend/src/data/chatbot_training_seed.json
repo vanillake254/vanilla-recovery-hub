@@ -1,0 +1,151 @@
+{
+  "intents": [
+    {
+      "name": "greeting",
+      "patterns": ["hello", "hi", "hey", "good morning", "good afternoon", "good evening", "hi there", "hello there", "greetings", "what's up", "sup", "howdy", "hiya", "hey there"],
+      "responses": ["Hello! 👋 I'm here to help you recover your hacked or locked account. Which platform do you need help with?", "Hi there! Welcome to Vanilla Recovery Hub. Tell me, which account are you trying to recover?"],
+      "tags": ["general", "greeting"]
+    },
+    {
+      "name": "lost_account_facebook",
+      "patterns": ["my facebook is hacked", "facebook locked me out", "can't access facebook", "facebook account hacked", "someone hacked my facebook", "facebook compromised", "locked out of facebook", "facebook suspended", "facebook disabled", "recover facebook account", "help with facebook", "facebook recovery"],
+      "responses": ["I'm sorry to hear your Facebook account was compromised. Let's recover it together. First, do you still have access to the email or phone number linked to your Facebook account?", "Don't worry, Facebook account recovery is possible! Quick question: Can you still access the recovery email or phone number on your account?"],
+      "context": ["facebook", "has_email_check"],
+      "tags": ["recovery", "facebook", "pre_payment"]
+    },
+    {
+      "name": "lost_account_instagram",
+      "patterns": ["my instagram is hacked", "instagram locked", "can't log into instagram", "instagram account hacked", "someone took my instagram", "instagram compromised", "recover instagram", "instagram recovery", "help with instagram", "lost instagram account"],
+      "responses": ["Instagram recovery is my specialty! First question: Do you still have access to the email or phone number linked to your Instagram?", "Let's get your Instagram back! Quick check - can you access the email or phone number connected to your account?"],
+      "context": ["instagram", "has_email_check"],
+      "tags": ["recovery", "instagram", "pre_payment"]
+    },
+    {
+      "name": "lost_account_gmail",
+      "patterns": ["gmail hacked", "can't access gmail", "gmail locked", "google account hacked", "recover gmail", "gmail recovery", "someone hacked my email", "gmail compromised", "locked out of gmail", "forgot gmail password"],
+      "responses": ["Gmail recovery can be done! Do you have access to a recovery email or phone number linked to your Gmail account?", "Let's recover your Gmail. First: Do you still have your recovery phone number or alternate email?"],
+      "context": ["gmail", "has_email_check"],
+      "tags": ["recovery", "gmail", "pre_payment"]
+    },
+    {
+      "name": "lost_account_tiktok",
+      "patterns": ["tiktok hacked", "tiktok locked", "can't access tiktok", "tiktok account stolen", "recover tiktok", "tiktok recovery", "tiktok suspended", "tiktok banned"],
+      "responses": ["TikTok account recovery - I'm here to help! Do you still have access to your linked email or phone?"],
+      "context": ["tiktok", "has_email_check"],
+      "tags": ["recovery", "tiktok", "pre_payment"]
+    },
+    {
+      "name": "lost_account_youtube",
+      "patterns": ["youtube hacked", "youtube account locked", "can't access youtube channel", "recover youtube", "youtube recovery", "youtube suspended", "youtube channel stolen"],
+      "responses": ["YouTube uses your Google account, so we'll recover it through Gmail. Do you have access to your recovery email or phone?"],
+      "context": ["youtube", "has_email_check"],
+      "tags": ["recovery", "youtube", "pre_payment"]
+    },
+    {
+      "name": "has_email_access_yes",
+      "patterns": ["yes i have email access", "yes i can access my email", "i still have my email", "yes", "yep", "yeah", "i do", "i have access", "i can access it", "email is fine", "my email works"],
+      "responses": ["Great news! 🎉 Having email access makes recovery much easier. Here's what we'll do:\n\n1. Try the platform's 'Forgot Password' option\n2. Request a password reset link\n3. Check your email (and spam folder)\n4. Follow the reset instructions\n\nFor detailed step-by-step guidance and live support, you can upgrade to our Premium Recovery Service. Would you like to know more?"],
+      "context": ["has_email_yes"],
+      "tags": ["recovery", "diagnosis"]
+    },
+    {
+      "name": "has_email_access_no",
+      "patterns": ["no i don't have email access", "no email access", "my email was also hacked", "no", "nope", "i can't", "i lost my email", "email hacked too", "no access", "email gone"],
+      "responses": ["This is more challenging, but still recoverable! When both your account and email are compromised, you'll need:\n\n✅ Platform's identity verification process\n✅ Proof of ownership (old posts, photos, ID verification)\n✅ Direct support contact\n\nOur Premium service specializes in complex cases like this. We'll guide you through identity verification, help you contact support effectively, and maximize your recovery chances. Should I explain what's included?"],
+      "context": ["has_email_no", "complex_case"],
+      "tags": ["recovery", "diagnosis", "complex"]
+    },
+    {
+      "name": "what_do_i_get",
+      "patterns": ["what do i get after i pay", "what's included", "what do i receive", "what will i get", "what am i paying for", "what services included", "tell me what i get", "what's in the premium", "what do you offer"],
+      "responses": ["After payment, you get:\n\n✅ Personal case analysis for your specific situation\n✅ Platform-specific step-by-step recovery instructions\n✅ One-on-one chat support for follow-up questions\n✅ Security checklist PDF to prevent future hacks\n✅ Help enabling 2FA and securing your account\n✅ Priority response (within 24 hours)\n✅ Email with all instructions\n\nOur goal is to get your account back AND make sure it stays secure! 🔐"],
+      "tags": ["payment", "pre_payment", "service_info"]
+    },
+    {
+      "name": "pricing",
+      "patterns": ["how much", "what's the price", "cost", "pricing", "how much does it cost", "what do you charge", "fees", "price list", "packages", "plans", "rates"],
+      "responses": ["Our pricing is transparent:\n\n💼 **Basic Recovery**: KES 1,500\n- Email guidance & step-by-step instructions\n- Chat support for questions\n- Security checklist\n\n🔥 **Premium Recovery**: KES 3,000\n- Everything in Basic, PLUS:\n- Priority 12-hour response\n- Done-for-you assistance (with consent)\n- 2FA setup help\n- 7-day follow-up support\n\nWe accept M-Pesa, Visa, and Mastercard via Flutterwave. Ready to start?"],
+      "tags": ["payment", "pricing", "pre_payment"]
+    },
+    {
+      "name": "payment_methods",
+      "patterns": ["what payment methods", "how can i pay", "do you accept mpesa", "payment options", "can i use card", "do you take visa", "mastercard accepted", "how to pay"],
+      "responses": ["We accept:\n\n📱 M-Pesa\n💳 Visa & Mastercard\n💳 Credit/Debit cards\n\nAll payments are processed securely through Flutterwave, a trusted payment gateway. Your financial information is never stored on our servers. 🔒"],
+      "tags": ["payment", "pre_payment"]
+    },
+    {
+      "name": "how_long",
+      "patterns": ["how long will it take", "how long does recovery take", "time to recover", "recovery time", "how fast", "when will my account be back", "duration", "timeframe", "how many days"],
+      "responses": ["Recovery time varies:\n\n⚡ **Simple cases** (you have email access): Usually 1-3 days\n⏰ **Complex cases** (no email access, identity verification needed): 5-14 days\n\nMost recoveries are completed within a week. Platform response times can vary, but we'll follow up persistently on your behalf. Our Premium tier gets priority processing!"],
+      "tags": ["recovery", "timeline"]
+    },
+    {
+      "name": "do_you_need_password",
+      "patterns": ["do you need my password", "should i give you my password", "can i share my password", "do i send my password", "will you ask for password", "password required", "give you login details", "share credentials", "need my login"],
+      "responses": ["🚨 **ABSOLUTELY NOT!** 🚨\n\nWe will NEVER ask for your password. It's against our policy and unsafe.\n\n✅ What we DO:\n- Guide you to reset it yourself\n- Provide step-by-step instructions\n- Offer screen-share support (with consent)\n\n❌ What we DON'T DO:\n- Ask for passwords\n- Request login credentials\n- Log into your account\n\nIf anyone claiming to be from Vanilla Recovery Hub asks for your password, report them immediately. We value your security! 🔐"],
+      "tags": ["security", "privacy", "policy"]
+    },
+    {
+      "name": "how_to_enable_2fa",
+      "patterns": ["how to enable 2fa", "what is 2fa", "two factor authentication", "how to set up 2fa", "enable two factor", "2fa setup", "secure my account", "turn on 2fa"],
+      "responses": ["Two-Factor Authentication (2FA) is crucial for security! Here's how:\n\n**For Facebook/Instagram:**\n1. Settings → Security → Two-Factor Authentication\n2. Choose SMS or Authenticator App\n3. Follow the setup prompts\n\n**For Gmail:**\n1. Google Account → Security → 2-Step Verification\n2. Add your phone number\n3. Choose verification method\n\n💡 **Pro tip:** Use an authenticator app (Google Authenticator, Authy) instead of SMS for better security."],
+      "tags": ["security", "2fa"],
+      "requires_payment": false
+    },
+    {
+      "name": "refund_policy",
+      "patterns": ["refund policy", "can i get a refund", "money back guarantee", "what if it doesn't work", "refund", "money back", "guarantee"],
+      "responses": ["Our refund policy:\n\n✅ **Full refund if:**\n- We don't respond within 48 hours\n- We fail to provide the promised service\n\n⚠️ **No refund if:**\n- The platform permanently disabled your account (we'll still try our best)\n- You don't follow the provided recovery steps\n- You provide false information\n\nWe're committed to honest service. If we can't help, we'll tell you upfront before charging. Most accounts ARE recoverable!"],
+      "tags": ["payment", "refund", "policy"]
+    },
+    {
+      "name": "escalate_to_human",
+      "patterns": ["i want human help", "speak to a person", "talk to human", "real person", "connect me to agent", "i need human", "human support", "not a bot", "talk to someone", "human agent", "representative"],
+      "responses": ["I understand! Let me connect you with our support team. A human agent will respond shortly (usually within 2 hours during business hours). In the meantime, is there anything specific you'd like me to note for them?"],
+      "escalate": true,
+      "tags": ["escalation", "support"]
+    },
+    {
+      "name": "contact_support",
+      "patterns": ["contact support", "how to contact you", "support email", "phone number", "reach out", "get in touch", "customer service"],
+      "responses": ["You can reach us:\n\n💬 **Chat:** Right here! (fastest response)\n📧 **Email:** support@vanillarecoveryhub.com\n📱 **WhatsApp:** +254 XXX XXX XXX\n\n**Business Hours:**\nMon-Fri: 8 AM - 8 PM EAT\nSat: 9 AM - 5 PM EAT\nSun: Closed (emergency cases only)\n\n💡 For fastest response, use this chat or email. We typically respond within 2 hours during business hours!"],
+      "tags": ["support", "contact"]
+    },
+    {
+      "name": "privacy_policy",
+      "patterns": ["privacy policy", "data privacy", "do you share my data", "is my data safe", "what data do you collect", "gdpr"],
+      "responses": ["Your privacy is our priority:\n\n🔒 **We NEVER:**\n- Ask for passwords\n- Share your data with third parties\n- Sell your information\n- Store payment details (handled by Flutterwave)\n\n✅ **We DO collect:**\n- Name, email, phone (for service delivery)\n- Chat logs (to improve support)\n- Payment status (not card details)\n\nFull privacy policy: vanillarecoveryhub.com/privacy"],
+      "tags": ["privacy", "policy", "gdpr"]
+    },
+    {
+      "name": "account_types",
+      "patterns": ["what accounts can you recover", "supported platforms", "which accounts", "do you recover", "what platforms"],
+      "responses": ["We specialize in recovering:\n\n✅ **Social Media:**\n- Facebook\n- Instagram\n- TikTok\n- Twitter/X\n- Snapchat\n- LinkedIn\n\n✅ **Email:**\n- Gmail\n- Yahoo Mail\n- Outlook/Hotmail\n\n✅ **Other:**\n- YouTube channels\n- WhatsApp Business\n- Telegram\n\nEven if your platform isn't listed, we can likely help! What account do you need to recover?"],
+      "tags": ["service_info", "platforms"]
+    },
+    {
+      "name": "prevention_tips",
+      "patterns": ["how to prevent hacking", "avoid getting hacked", "protect my account", "security tips", "stay safe online", "prevent future hacks"],
+      "responses": ["Prevention is key! Follow these:\n\n🔐 **Essential Security:**\n1. Enable 2FA on ALL accounts\n2. Use unique passwords (password manager helps)\n3. Never click suspicious links\n4. Don't share OTPs or passwords with anyone\n5. Keep recovery email & phone updated\n\n⚠️ **Warning Signs:**\n- Unrecognized login alerts\n- Changed password/email\n- Posts you didn't make\n- Friends reporting spam from you\n\nAfter we recover your account, I'll send you a complete security checklist! 🛡️"],
+      "tags": ["security", "prevention", "education"]
+    },
+    {
+      "name": "done_for_you_service",
+      "patterns": ["do it for me", "can you do it for me", "i'm not techy", "need help doing it", "done for you", "full service", "you handle it"],
+      "responses": ["Yes! We offer **'Done For You' Recovery** 🚀\n\nHere's how it works:\n\n1. **You sign** a consent form (for your protection)\n2. **We schedule** a secure screen-share session\n3. **We guide you** step-by-step in real-time\n4. **You perform actions** while we direct you\n5. **We secure** your account afterward (2FA, password update)\n\n🔒 **Important:** We NEVER ask for your password. You stay in control during the screen-share.\n\n💰 **This is included in our Premium tier** (KES 3,000)\n\nInterested? Let's get started!"],
+      "tags": ["service_info", "premium", "done_for_you"]
+    },
+    {
+      "name": "thank_you",
+      "patterns": ["thank you", "thanks", "appreciate it", "thanks a lot", "thank you so much", "thx", "ty", "much appreciated"],
+      "responses": ["You're very welcome! 😊 I'm here anytime you need help. Is there anything else I can assist you with?", "Happy to help! If you have any other questions, just ask. Good luck with your recovery! 🎉"],
+      "tags": ["general", "courtesy"]
+    },
+    {
+      "name": "goodbye",
+      "patterns": ["bye", "goodbye", "see you", "talk later", "gtg", "gotta go", "see ya", "catch you later", "take care"],
+      "responses": ["Goodbye! Stay safe online. Feel free to return anytime you need help! 👋", "Take care! Remember, we're here 24/7 if you need us. Good luck! 🍀"],
+      "tags": ["general", "goodbye"]
+    }
+  ]
+}

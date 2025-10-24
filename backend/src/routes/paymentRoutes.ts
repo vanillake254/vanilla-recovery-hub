@@ -1,0 +1,38 @@
+import express from 'express';
+import { body } from 'express-validator';
+import * as paymentController from '../controllers/paymentController';
+import { paymentRateLimiter } from '../middleware/rateLimiter';
+
+const router = express.Router();
+
+/**
+ * @route   POST /api/payments/initiate
+ * @desc    Initiate payment with Flutterwave
+ * @access  Public
+ */
+router.post(
+  '/initiate',
+  paymentRateLimiter,
+  [
+    body('requestId').notEmpty().withMessage('Request ID is required'),
+    body('amount').isNumeric().withMessage('Amount must be numeric'),
+    body('tier').optional().isIn(['basic', 'premium']).withMessage('Invalid tier')
+  ],
+  paymentController.initiatePayment
+);
+
+/**
+ * @route   POST /api/payments/webhook
+ * @desc    Handle Flutterwave webhook
+ * @access  Public (but verified)
+ */
+router.post('/webhook', paymentController.handleWebhook);
+
+/**
+ * @route   GET /api/payments/verify/:tx_ref
+ * @desc    Verify payment status
+ * @access  Public
+ */
+router.get('/verify/:tx_ref', paymentController.verifyPayment);
+
+export default router;
