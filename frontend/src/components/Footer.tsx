@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { FiMail, FiMapPin, FiShield } from 'react-icons/fi';
+import { FiMapPin, FiShield } from 'react-icons/fi';
 
 export default function Footer() {
   return (
@@ -92,7 +92,15 @@ export default function Footer() {
             © {new Date().getFullYear()} Vanilla Recovery Hub. All rights reserved.
           </p>
           <p className="text-gray-500 mt-4 md:mt-0">
-            🔒 Secured by Flutterwave | Made with ❤️ in Kenya
+            🔒 Secured by Flutterwave | Made with ❤️ in Kenya | Powered by{' '}
+            <a 
+              href="https://vanillasoftwares.web.app/" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="text-primary-400 hover:text-primary-300 transition-colors font-semibold"
+            >
+              Vanilla Softwares
+            </a>
           </p>
         </div>
       </div>
