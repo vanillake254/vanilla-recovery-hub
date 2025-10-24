@@ -85,12 +85,12 @@ class ChatbotService {
     const intent = this.intents.find(i => i.name === intentName);
 
     // Handle low confidence or no match
-    if (confidence < 0.4 || !intent) {
+    if (confidence < 0.2 || !intent) {
       return {
         reply: "I'm not quite sure I understood that. Could you rephrase your question, or would you like to speak with a human support agent?",
         intent: 'unknown',
         confidence,
-        shouldEscalate: confidence < 0.3,
+        shouldEscalate: confidence < 0.15,
         requiresPayment: false,
         suggestions: [
           "How can I recover my hacked account?",
@@ -101,7 +101,7 @@ class ChatbotService {
     }
 
     // Check for escalation intent
-    if (intent.escalate || confidence < 0.5) {
+    if (intent.escalate) {
       return {
         reply: "I understand you need additional help. Let me connect you with our support team. They'll respond shortly.",
         intent: intentName,

@@ -7,8 +7,15 @@
       "tags": ["general", "greeting"]
     },
     {
+      "name": "general_hacked_account",
+      "patterns": ["my account is hacked", "account hacked", "someone hacked my account", "i was hacked", "hacked account", "account compromised", "help my account", "recover my account", "get my account back", "account stolen", "lost my account", "cant access my account", "locked out"],
+      "responses": ["I'm sorry to hear your account was hacked! I'm here to help you recover it. Which platform is it? (Facebook, Instagram, Gmail, TikTok, etc.)", "Don't worry, we can help you recover your hacked account! First, tell me which platform: Facebook, Instagram, Gmail, TikTok, or another?"],
+      "tags": ["recovery", "general", "pre_payment"],
+      "suggestions": ["My Facebook is hacked", "I need help with Instagram", "Gmail recovery", "TikTok account"]
+    },
+    {
       "name": "lost_account_facebook",
-      "patterns": ["my facebook is hacked", "facebook locked me out", "can't access facebook", "facebook account hacked", "someone hacked my facebook", "facebook compromised", "locked out of facebook", "facebook suspended", "facebook disabled", "recover facebook account", "help with facebook", "facebook recovery", "facebook account recovery", "facebook hacked account", "facebook account locked"],
+      "patterns": ["my facebook is hacked", "facebook locked me out", "can't access facebook", "facebook account hacked", "someone hacked my facebook", "facebook compromised", "locked out of facebook", "facebook suspended", "facebook disabled", "recover facebook account", "help with facebook", "facebook recovery", "facebook account recovery", "facebook hacked account", "facebook account locked", "hacked facebook", "facebook hack", "lost facebook", "cant login facebook", "facebook problem"],
       "responses": ["I'm sorry to hear your Facebook account was compromised. Let's recover it together. First, do you still have access to the email or phone number linked to your Facebook account?", "Don't worry, Facebook account recovery is possible! Quick question: Can you still access the recovery email or phone number on your account?"],
       "context": ["facebook", "has_email_check"],
       "tags": ["recovery", "facebook", "pre_payment"]

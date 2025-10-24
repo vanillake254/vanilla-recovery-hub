@@ -7,6 +7,7 @@ import { connectDatabase, checkDatabaseHealth } from './lib/prisma';
 import { logger } from './utils/logger';
 import { errorHandler } from './middleware/errorHandler';
 import { rateLimiter } from './middleware/rateLimiter';
+import chatbotService from './services/chatbotService';
 
 // Import routes
 import requestRoutes from './routes/requestRoutes';
@@ -67,6 +68,11 @@ app.use(errorHandler);
 const startServer = async () => {
   try {
     await connectDatabase();
+    
+    // Initialize chatbot
+    logger.info('🤖 Initializing Vanilla AI Bot...');
+    await chatbotService.initialize();
+    logger.info('✅ Vanilla AI Bot ready!');
     
     app.listen(PORT, () => {
       logger.info(`🚀 Server running on port ${PORT}`);

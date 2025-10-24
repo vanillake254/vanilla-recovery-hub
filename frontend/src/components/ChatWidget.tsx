@@ -175,8 +175,20 @@ export default function ChatWidget() {
           <div className="bg-primary-600 text-white p-4 rounded-t-2xl flex items-center justify-between">
             <div className="flex items-center space-x-3">
               <div className="relative">
-                <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center">
-                  <span className="text-2xl">🤖</span>
+                <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center p-1">
+                  <svg viewBox="0 0 512 512" className="w-full h-full">
+                    <circle cx="256" cy="256" r="256" fill="#7C3AED"/>
+                    <path d="M256 80 L400 140 L400 280 Q400 360, 256 450 Q112 360, 112 280 L112 140 Z" 
+                          fill="#FFFFFF" 
+                          opacity="0.95"/>
+                    <path d="M180 260 L230 310 L340 180" 
+                          fill="none" 
+                          stroke="#7C3AED" 
+                          strokeWidth="24" 
+                          strokeLinecap="round" 
+                          strokeLinejoin="round"/>
+                    <circle cx="230" cy="310" r="12" fill="#7C3AED"/>
+                  </svg>
                 </div>
                 <div className="absolute bottom-0 right-0 w-3 h-3 bg-green-400 rounded-full border-2 border-primary-600"></div>
               </div>
