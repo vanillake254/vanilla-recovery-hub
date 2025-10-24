@@ -35,4 +35,11 @@ router.post('/webhook', paymentController.handleWebhook);
  */
 router.get('/verify/:tx_ref', paymentController.verifyPayment);
 
+/**
+ * @route   GET /api/payments/check-access/:identifier
+ * @desc    Check if user has paid access for premium chat
+ * @access  Public
+ */
+router.get('/check-access/:identifier', paymentController.checkChatAccess);
+
 export default router;

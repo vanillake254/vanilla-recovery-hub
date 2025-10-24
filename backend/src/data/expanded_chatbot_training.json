@@ -1,0 +1,192 @@
+{
+  "bot_name": "Vanilla AI Bot",
+  "bot_description": "Your intelligent account recovery assistant",
+  "additional_intents": [
+    {
+      "name": "what_is_vanilla",
+      "patterns": ["what is vanilla recovery hub", "who are you", "what do you do", "tell me about vanilla", "about your company", "what's vanilla"],
+      "responses": ["I'm Vanilla AI Bot from Vanilla Recovery Hub - Kenya's leading account recovery service! We help people recover hacked or locked social media and email accounts. We've successfully recovered 500+ accounts with an 85% success rate. How can I help you today?"],
+      "tags": ["about", "company_info"]
+    },
+    {
+      "name": "account_locked_vs_hacked",
+      "patterns": ["what's the difference between locked and hacked", "locked vs hacked", "is my account locked or hacked", "how do i know if hacked", "account locked meaning"],
+      "responses": ["Great question!\n\n🔒 **Locked Account:**\n- Platform locked it (suspicious activity, policy violation)\n- You can't log in\n- Usually shows 'Account Disabled' message\n\n🚨 **Hacked Account:**\n- Someone else accessed it\n- Password changed\n- Unauthorized posts/messages\n- Email/phone changed\n\nBoth are recoverable! Which situation are you in?"],
+      "tags": ["education", "diagnosis"]
+    },
+    {
+      "name": "why_was_i_hacked",
+      "patterns": ["why was i hacked", "how did they hack me", "how do hackers get in", "why me", "how did this happen"],
+      "responses": ["Common ways accounts get hacked:\n\n1. **Phishing links** - Clicked a fake login page\n2. **Weak passwords** - Easy to guess\n3. **Password reuse** - Same password on multiple sites\n4. **Public WiFi** - Unsecured networks\n5. **Malware** - Keyloggers on your device\n6. **Social engineering** - Tricked into sharing info\n\nThe good news? We can recover it AND prevent future attacks! Want to start recovery?"],
+      "tags": ["education", "security"]
+    },
+    {
+      "name": "success_rate",
+      "patterns": ["what's your success rate", "how successful are you", "do you guarantee recovery", "success rate", "chances of recovery"],
+      "responses": ["Our success rate is 85%! 🎯\n\n**We CAN recover:**\n- Accounts with email/phone access (95% success)\n- Hacked accounts with identity proof (80% success)\n- Locked accounts (70% success)\n\n**We CAN'T recover:**\n- Permanently banned accounts (policy violations)\n- Accounts deleted by the platform\n- Accounts with zero proof of ownership\n\nWe'll assess your case honestly before charging. Most accounts ARE recoverable!"],
+      "tags": ["service_info", "success"]
+    },
+    {
+      "name": "how_long_response",
+      "patterns": ["how long until you respond", "response time", "how fast do you reply", "when will you answer"],
+      "responses": ["Response times:\n\n⚡ **Free Chat (Vanilla AI Bot):** Instant!\n💬 **Basic Support:** Within 24 hours\n🚀 **Premium Support:** Within 12 hours\n🔥 **Urgent Cases:** Within 2 hours (Premium only)\n\n**Business Hours:** Mon-Sat, 8 AM - 8 PM EAT\n\nI'm available 24/7 to answer questions! For human support, upgrade to paid service."],
+      "tags": ["support", "timeline"]
+    },
+    {
+      "name": "what_if_no_email_phone",
+      "patterns": ["i lost my email and phone", "no access to email or phone", "both email and phone hacked", "can't access recovery options"],
+      "responses": ["This is challenging but NOT impossible! Here's the process:\n\n1. **Identity Verification** - Submit ID, old photos, account history\n2. **Trusted Contacts** - Use platform's trusted friends feature\n3. **Appeal Process** - Direct support contact with proof\n4. **Account History** - Show purchase history, old posts, etc.\n\nOur Premium service specializes in complex cases like yours. We'll guide you through every step. Success rate: 70%. Want to proceed?"],
+      "tags": ["recovery", "complex", "no_access"]
+    },
+    {
+      "name": "twitter_recovery",
+      "patterns": ["twitter hacked", "x account hacked", "recover twitter", "twitter locked", "x suspended", "twitter recovery"],
+      "responses": ["Twitter/X recovery process:\n\n1. Try 'Forgot Password' with your email/phone\n2. If locked/suspended, appeal at help.twitter.com\n3. Provide ID verification if requested\n4. Check for automated suspension (usually 12-48 hours)\n\nDo you still have access to your recovery email/phone?"],
+      "tags": ["recovery", "twitter"]
+    },
+    {
+      "name": "whatsapp_recovery",
+      "patterns": ["whatsapp hacked", "recover whatsapp", "whatsapp account stolen", "someone using my whatsapp"],
+      "responses": ["WhatsApp recovery is unique:\n\n1. **Reinstall WhatsApp** on your phone\n2. **Enter your number** - You'll get a verification code\n3. **This kicks out** the hacker automatically\n4. **Enable 2-Step Verification** immediately\n\nIf your SIM was stolen:\n1. Contact your mobile provider ASAP\n2. Block the old SIM\n3. Get a new SIM with same number\n4. Then follow steps above\n\nNeed detailed help? I can guide you!"],
+      "tags": ["recovery", "whatsapp"]
+    },
+    {
+      "name": "snapchat_recovery",
+      "patterns": ["snapchat hacked", "recover snapchat", "snapchat locked", "snapchat account stolen"],
+      "responses": ["Snapchat recovery steps:\n\n1. Go to accounts.snapchat.com\n2. Click 'Forgot Password'\n3. Choose email or SMS recovery\n4. Follow reset instructions\n5. If locked, submit unlock request\n\nSnapchat is usually quick to respond (24-48 hours). Do you have access to your recovery email/phone?"],
+      "tags": ["recovery", "snapchat"]
+    },
+    {
+      "name": "linkedin_recovery",
+      "patterns": ["linkedin hacked", "recover linkedin", "linkedin account compromised", "linkedin locked"],
+      "responses": ["LinkedIn recovery:\n\n1. Visit linkedin.com/checkpoint/rp/request-password-reset\n2. Enter your email\n3. Check email for reset link\n4. Create new strong password\n5. Review recent activity\n6. Enable 2-Step Verification\n\nLinkedIn is very responsive. Recovery usually takes 1-2 days. Need help?"],
+      "tags": ["recovery", "linkedin"]
+    },
+    {
+      "name": "yahoo_mail_recovery",
+      "patterns": ["yahoo mail hacked", "recover yahoo", "yahoo email hacked", "yahoo account recovery"],
+      "responses": ["Yahoo Mail recovery:\n\n1. Go to login.yahoo.com\n2. Click 'Forgot password'\n3. Use recovery email or phone\n4. Answer security questions if set\n5. If stuck, use Yahoo Account Recovery form\n\nYahoo can take 3-7 days for complex cases. Do you remember your security questions?"],
+      "tags": ["recovery", "yahoo"]
+    },
+    {
+      "name": "outlook_recovery",
+      "patterns": ["outlook hacked", "hotmail hacked", "recover outlook", "microsoft account hacked"],
+      "responses": ["Outlook/Hotmail recovery:\n\n1. Visit account.live.com/password/reset\n2. Enter your email\n3. Choose verification method\n4. Complete identity verification\n5. Create new password\n\nMicrosoft has strong recovery options. Success rate: 90%! Do you have access to your recovery email/phone?"],
+      "tags": ["recovery", "outlook"]
+    },
+    {
+      "name": "telegram_recovery",
+      "patterns": ["telegram hacked", "recover telegram", "telegram account stolen", "telegram locked"],
+      "responses": ["Telegram recovery:\n\n1. **Reinstall Telegram**\n2. **Enter your phone number**\n3. **Request verification code** (SMS)\n4. **This logs out** all other sessions\n5. **Enable 2-Step Verification** (Settings → Privacy)\n\nIf your phone was stolen, contact your carrier first to block the SIM. Then follow steps above with new SIM (same number)."],
+      "tags": ["recovery", "telegram"]
+    },
+    {
+      "name": "two_accounts_same_platform",
+      "patterns": ["i have two accounts", "multiple accounts hacked", "both my instagrams hacked", "recover multiple accounts"],
+      "responses": ["Multiple accounts hacked? That's serious! Here's what to do:\n\n1. **Prioritize** - Which account is most important?\n2. **Recover one at a time** - Don't confuse platforms\n3. **Check for common password** - Did you use same password?\n4. **Scan for malware** - Your device might be compromised\n\nOur Premium service can handle multiple accounts. Each account is treated separately. Want to start with the most important one?"],
+      "tags": ["recovery", "multiple"]
+    },
+    {
+      "name": "device_compromised",
+      "patterns": ["is my phone hacked", "my device compromised", "phone has virus", "malware on phone", "keylogger"],
+      "responses": ["If your device is compromised:\n\n🚨 **Immediate Actions:**\n1. **Don't log into accounts** on this device\n2. **Change passwords** from a different device\n3. **Run antivirus scan** (Malwarebytes, Avast)\n4. **Factory reset** if heavily infected\n5. **Check installed apps** - Remove suspicious ones\n\n⚠️ **Warning Signs:**\n- Battery drains fast\n- Phone overheats\n- Unknown apps installed\n- Ads everywhere\n- Slow performance\n\nRecover your accounts first, THEN secure your device!"],
+      "tags": ["security", "device", "malware"]
+    },
+    {
+      "name": "phishing_link_clicked",
+      "patterns": ["i clicked a phishing link", "clicked suspicious link", "fake login page", "entered password on fake site"],
+      "responses": ["You clicked a phishing link! Act FAST:\n\n⚡ **Immediate Steps:**\n1. **Change ALL passwords** - Start with email\n2. **Enable 2FA** on all accounts\n3. **Check recent activity** on all platforms\n4. **Scan device** for malware\n5. **Alert friends** - They might get phishing from you\n\n🔍 **Check for:**\n- Unauthorized posts\n- Changed email/phone\n- New linked accounts\n- Unknown devices logged in\n\nWant help securing all your accounts?"],
+      "tags": ["security", "phishing", "emergency"]
+    },
+    {
+      "name": "password_manager_recommendation",
+      "patterns": ["password manager", "how to remember passwords", "password storage", "best password manager"],
+      "responses": ["Password managers are ESSENTIAL! Recommended:\n\n🔐 **Best Options:**\n1. **Bitwarden** (Free, open-source)\n2. **1Password** (Premium, $3/month)\n3. **LastPass** (Free tier available)\n4. **Google Password Manager** (Built-in Chrome)\n\n✅ **Benefits:**\n- Generate strong unique passwords\n- Auto-fill login forms\n- Sync across devices\n- Secure encrypted storage\n\n💡 **Pro Tip:** Use a STRONG master password + 2FA on the password manager itself!"],
+      "tags": ["security", "tools", "password"]
+    },
+    {
+      "name": "authenticator_app_setup",
+      "patterns": ["authenticator app", "google authenticator", "authy", "2fa app", "how to use authenticator"],
+      "responses": ["Authenticator apps are MORE secure than SMS! Here's how:\n\n📱 **Recommended Apps:**\n- Google Authenticator\n- Microsoft Authenticator\n- Authy (has cloud backup)\n\n**Setup Steps:**\n1. Download app from Play Store/App Store\n2. Go to account's Security settings\n3. Choose 'Authenticator App' for 2FA\n4. Scan QR code with app\n5. Enter 6-digit code to verify\n6. **SAVE backup codes** somewhere safe!\n\n⚠️ **Important:** If you lose your phone, backup codes are your only way in!"],
+      "tags": ["security", "2fa", "tools"]
+    },
+    {
+      "name": "backup_codes",
+      "patterns": ["backup codes", "recovery codes", "what are backup codes", "where to save backup codes"],
+      "responses": ["Backup codes are CRITICAL! They're your emergency access.\n\n📝 **What are they?**\n- One-time use codes (usually 8-10 codes)\n- Used when you can't access 2FA\n- Generated when you enable 2FA\n\n💾 **Where to save them:**\n✅ Password manager\n✅ Encrypted note app\n✅ Physical paper in safe place\n❌ NOT in email or cloud notes\n\n🚨 **If you lose them:**\n- You'll need identity verification\n- Recovery can take days/weeks\n- Save them NOW!"],
+      "tags": ["security", "2fa", "backup"]
+    },
+    {
+      "name": "strong_password_tips",
+      "patterns": ["strong password", "how to create password", "password tips", "good password", "secure password"],
+      "responses": ["Create UNBREAKABLE passwords:\n\n✅ **DO:**\n- 12+ characters minimum\n- Mix uppercase, lowercase, numbers, symbols\n- Use passphrase: \"Coffee@Nairobi2025!\"\n- Unique for EVERY account\n- Use password manager\n\n❌ **DON'T:**\n- Use personal info (name, birthday)\n- Use dictionary words\n- Reuse passwords\n- Use \"password123\" or \"12345678\"\n- Share with anyone\n\n💡 **Example Strong Password:**\n`Vanilla$Recovery#2025!Kenya`\n\nWant me to help you secure your recovered account?"],
+      "tags": ["security", "password", "education"]
+    },
+    {
+      "name": "check_if_email_leaked",
+      "patterns": ["is my email leaked", "data breach", "check if hacked", "haveibeenpwned", "email compromised"],
+      "responses": ["Check if your email was in a data breach:\n\n🔍 **Visit:** haveibeenpwned.com\n\n1. Enter your email\n2. See which sites were breached\n3. Change passwords on those sites\n4. Enable 2FA everywhere\n\n⚠️ **If breached:**\n- Change password immediately\n- Check for unauthorized access\n- Enable 2FA\n- Monitor account activity\n\nMost people have been in at least ONE breach. It's not your fault, but you must act!"],
+      "tags": ["security", "breach", "tools"]
+    },
+    {
+      "name": "sim_swap_attack",
+      "patterns": ["sim swap", "sim card stolen", "someone cloned my sim", "sim swap attack"],
+      "responses": ["SIM swap attack is SERIOUS! Here's what to do:\n\n🚨 **Immediate Actions:**\n1. **Call your mobile provider** - Report it NOW\n2. **Block the compromised SIM**\n3. **Get new SIM** with same number\n4. **Change ALL passwords** from different device\n5. **Enable app-based 2FA** (not SMS)\n\n⚠️ **What hackers can do:**\n- Receive your SMS codes\n- Reset passwords\n- Access bank accounts\n- Take over social media\n\n🔒 **Prevention:**\n- Set SIM PIN/PUK\n- Use authenticator apps instead of SMS\n- Contact provider to add extra security\n\nNeed help securing your accounts after SIM swap?"],
+      "tags": ["security", "sim_swap", "emergency"]
+    },
+    {
+      "name": "social_engineering",
+      "patterns": ["social engineering", "someone tricked me", "fake support call", "impersonation", "scam call"],
+      "responses": ["Social engineering is when hackers manipulate you into giving info. Common tactics:\n\n🎭 **Impersonation:**\n- Fake \"support\" calls/emails\n- Pretending to be friend in trouble\n- Fake \"security alert\" messages\n\n🚨 **Red Flags:**\n- Urgency (\"Act now or lose account!\")\n- Asking for passwords/OTPs\n- Suspicious links\n- Too good to be true offers\n\n🛡️ **Protection:**\n- NEVER share OTPs\n- Verify caller identity\n- Don't click links in messages\n- Call official support numbers\n\nIf you fell for a scam, change passwords IMMEDIATELY!"],
+      "tags": ["security", "scam", "education"]
+    },
+    {
+      "name": "account_selling_scam",
+      "patterns": ["someone wants to buy my account", "account selling", "is it safe to sell account", "transfer account"],
+      "responses": ["🚨 **NEVER sell or transfer your account!** Here's why:\n\n❌ **Risks:**\n- Against platform Terms of Service\n- Account will be banned\n- You lose access forever\n- Scammer won't pay\n- Your personal data exposed\n\n🎯 **Common Scams:**\n- \"I'll pay $500 for your Instagram\"\n- \"Verify your account for money\"\n- \"Transfer ownership for collaboration\"\n\n✅ **Legitimate Options:**\n- Grow your account yourself\n- Monetize through ads/sponsorships\n- Keep full control\n\nIf someone asked you to sell, it's a SCAM. Block them!"],
+      "tags": ["security", "scam", "warning"]
+    },
+    {
+      "name": "verification_badge_scam",
+      "patterns": ["verification badge", "blue tick", "get verified", "verification scam", "fake verification"],
+      "responses": ["Verification badge scams are EVERYWHERE! Here's the truth:\n\n✅ **Legitimate Verification:**\n- Applied through official platform settings\n- FREE (except Twitter Blue)\n- Requires proof of identity/notability\n- Takes weeks to process\n\n🚨 **SCAM Warning Signs:**\n- \"Pay me for verification\"\n- \"I work at Instagram/Facebook\"\n- Asking for your password\n- Suspicious links to \"verify\"\n- Too-good-to-be-true promises\n\n💡 **Real Process:**\n- Instagram: Settings → Account → Request Verification\n- Facebook: Settings → Verification\n- Twitter: Twitter Blue subscription\n\nAnyone asking for money/password is a SCAMMER!"],
+      "tags": ["security", "scam", "verification"]
+    },
+    {
+      "name": "fake_giveaway",
+      "patterns": ["giveaway scam", "fake giveaway", "won a prize", "instagram giveaway", "free iphone"],
+      "responses": ["Fake giveaways are a common trap! Spot them:\n\n🚨 **Red Flags:**\n- \"You won! Click here to claim\"\n- Asks for password/payment\n- Suspicious account (low followers, new)\n- Too good to be true prizes\n- Urgency (\"Claim in 24 hours!\")\n\n✅ **Real Giveaways:**\n- From verified accounts\n- Clear rules posted\n- No password required\n- No payment to claim\n- Announced publicly\n\n⚠️ **If you clicked:**\n1. Don't enter any info\n2. Change your password\n3. Check account activity\n4. Report the scam\n\nRemember: If it sounds too good to be true, it probably is!"],
+      "tags": ["security", "scam", "giveaway"]
+    },
+    {
+      "name": "instagram_dm_hack",
+      "patterns": ["instagram dm hack", "someone sent link in dm", "suspicious dm", "instagram message scam"],
+      "responses": ["Instagram DM hacks are spreading! Common tactics:\n\n🎯 **Scam Messages:**\n- \"Is this you in this video?\"\n- \"I can't believe you did this\"\n- \"Check out this photo of you\"\n- \"Free followers/likes\"\n- \"Your account will be deleted\"\n\n🚨 **What happens:**\n1. You click the link\n2. Fake login page appears\n3. You enter password\n4. Hacker gets access\n5. They send same message to YOUR friends\n\n✅ **Protection:**\n- NEVER click links in DMs\n- Verify with sender first\n- Check URL carefully\n- Enable 2FA\n\nIf you clicked, change password NOW!"],
+      "tags": ["security", "instagram", "scam"]
+    },
+    {
+      "name": "recovery_time_realistic",
+      "patterns": ["realistic recovery time", "how long really", "actual time to recover", "be honest about time"],
+      "responses": ["Let me be HONEST about recovery times:\n\n⚡ **Simple Cases (1-3 days):**\n- You have email/phone access\n- Just need password reset\n- No identity verification needed\n\n⏰ **Medium Cases (5-7 days):**\n- Lost email access\n- Need identity verification\n- Platform support response time\n\n🕐 **Complex Cases (1-3 weeks):**\n- No email/phone access\n- Account locked by platform\n- Multiple verification steps\n- Slow platform support\n\n❌ **Impossible Cases:**\n- Permanently banned (policy violation)\n- Account deleted by platform\n- Zero proof of ownership\n\nI'll assess YOUR case honestly. What's your situation?"],
+      "tags": ["timeline", "honesty", "expectations"]
+    },
+    {
+      "name": "what_info_needed",
+      "patterns": ["what information do you need", "what do i need to provide", "required information", "what details"],
+      "responses": ["Here's what we need to help you:\n\n📋 **Basic Information:**\n- Your name\n- Email address\n- Phone number\n- Platform (Instagram, Facebook, etc.)\n- Brief description of issue\n\n🔍 **For Recovery:**\n- Username/email of hacked account\n- When you lost access\n- Last password you remember\n- Whether you have email/phone access\n\n📸 **For Identity Verification (if needed):**\n- Government ID\n- Old photos from the account\n- Account creation date (if you remember)\n- Previous posts/content\n\n🚫 **We NEVER ask for:**\n- Current passwords\n- OTP codes\n- Bank details\n- Credit card info\n\nReady to start?"],
+      "tags": ["service_info", "requirements"]
+    },
+    {
+      "name": "payment_before_recovery",
+      "patterns": ["do i pay before recovery", "when do i pay", "payment timing", "pay first or after"],
+      "responses": ["Payment process:\n\n💰 **When You Pay:**\n- BEFORE we start the recovery process\n- After we assess your case\n- Once you choose Basic or Premium tier\n\n✅ **What You Get Immediately:**\n- Detailed recovery instructions (email)\n- Access to premium chat support\n- Step-by-step guidance\n- Security checklist\n\n🎯 **Why Pay First:**\n- Prevents time-wasters\n- Ensures serious commitment\n- Covers our expert time\n- Secure payment via Flutterwave\n\n💡 **Refund Policy:**\n- Full refund if we don't respond in 48 hours\n- Full refund if we can't provide promised service\n- We're honest about impossible cases\n\nFair?"],
+      "tags": ["payment", "process", "timing"]
+    },
+    {
+      "name": "why_not_free",
+      "patterns": ["why not free", "why do i have to pay", "free recovery", "can you do it for free"],
+      "responses": ["I understand the question! Here's why we charge:\n\n💼 **What You're Paying For:**\n- Expert human support (not just AI)\n- Hours of research on your case\n- Direct platform support contact\n- Follow-up until resolved\n- Security guidance\n- 24/7 availability\n\n🆓 **What's FREE:**\n- This AI chatbot (me!)\n- Basic guidance and tips\n- DIY recovery instructions\n- Security education\n\n💡 **Think of it like:**\n- You CAN fix your car yourself (free)\n- OR hire a mechanic (paid, faster, expert)\n\n🎯 **Our Prices:**\n- Basic: KES 1,500 (email support)\n- Premium: KES 3,000 (done-for-you)\n\nWe're affordable compared to losing your account forever! Worth it?"],
+      "tags": ["payment", "value", "justification"]
+    }
+  ]
+}

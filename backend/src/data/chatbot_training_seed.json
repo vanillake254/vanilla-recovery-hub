@@ -2,13 +2,13 @@
   "intents": [
     {
       "name": "greeting",
-      "patterns": ["hello", "hi", "hey", "good morning", "good afternoon", "good evening", "hi there", "hello there", "greetings", "what's up", "sup", "howdy", "hiya", "hey there"],
-      "responses": ["Hello! 👋 I'm here to help you recover your hacked or locked account. Which platform do you need help with?", "Hi there! Welcome to Vanilla Recovery Hub. Tell me, which account are you trying to recover?"],
+      "patterns": ["hello", "hi", "hey", "good morning", "good afternoon", "good evening", "hi there", "hello there", "greetings", "what's up", "sup", "howdy", "hiya", "hey there", "hi bot", "hello bot", "hey there bot", "hi vanilla", "hello vanilla", "hey vanilla"],
+      "responses": ["Hello! 👋 I'm Vanilla AI Bot, your account recovery assistant. I'm here to help you recover your hacked or locked account. Which platform do you need help with?", "Hi there! I'm Vanilla AI Bot from Vanilla Recovery Hub. Tell me, which account are you trying to recover?", "Hey! Welcome to Vanilla Recovery Hub. I'm here to help you with your account recovery. What's the issue you're facing?"],
       "tags": ["general", "greeting"]
     },
     {
       "name": "lost_account_facebook",
-      "patterns": ["my facebook is hacked", "facebook locked me out", "can't access facebook", "facebook account hacked", "someone hacked my facebook", "facebook compromised", "locked out of facebook", "facebook suspended", "facebook disabled", "recover facebook account", "help with facebook", "facebook recovery"],
+      "patterns": ["my facebook is hacked", "facebook locked me out", "can't access facebook", "facebook account hacked", "someone hacked my facebook", "facebook compromised", "locked out of facebook", "facebook suspended", "facebook disabled", "recover facebook account", "help with facebook", "facebook recovery", "facebook account recovery", "facebook hacked account", "facebook account locked"],
       "responses": ["I'm sorry to hear your Facebook account was compromised. Let's recover it together. First, do you still have access to the email or phone number linked to your Facebook account?", "Don't worry, Facebook account recovery is possible! Quick question: Can you still access the recovery email or phone number on your account?"],
       "context": ["facebook", "has_email_check"],
       "tags": ["recovery", "facebook", "pre_payment"]

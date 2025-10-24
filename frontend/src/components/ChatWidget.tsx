@@ -20,20 +20,39 @@ export default function ChatWidget() {
   const [inputText, setInputText] = useState('');
   const [loading, setLoading] = useState(false);
   const [sessionId, setSessionId] = useState('');
+  const [isPaidUser, setIsPaidUser] = useState(false);
+  const [userEmail, setUserEmail] = useState('');
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  // Initialize session
+  // Initialize session and check payment status
   useEffect(() => {
     const storedSession = localStorage.getItem('chatSessionId');
     if (storedSession) {
       setSessionId(storedSession);
-      // Load previous messages if any
       loadSession(storedSession);
     } else {
       const newSession = uuidv4();
       setSessionId(newSession);
       localStorage.setItem('chatSessionId', newSession);
     }
+
+    // Check payment status
+    const checkPaymentStatus = async () => {
+      const email = localStorage.getItem('userEmail');
+      const phone = localStorage.getItem('userPhone');
+      if (email || phone) {
+        try {
+          const response = await axios.get(`${API_URL}/api/payments/check-access/${email || phone}`);
+          if (response.data.hasPaidAccess) {
+            setIsPaidUser(true);
+            setUserEmail(email || '');
+          }
+        } catch (error) {
+          console.error('Failed to check payment status:', error);
+        }
+      }
+    };
+    checkPaymentStatus();
   }, []);
 
   // Auto-scroll to bottom
@@ -59,6 +78,12 @@ export default function ChatWidget() {
   const sendMessage = async (text?: string) => {
     const messageText = text || inputText.trim();
     if (!messageText || loading) return;
+
+    // Handle special commands
+    if (messageText === 'Start Recovery Process') {
+      window.location.href = '/recover';
+      return;
+    }
 
     const userMessage: Message = {
       from: 'user',
@@ -114,7 +139,7 @@ export default function ChatWidget() {
     if (!isOpen && messages.length === 0) {
       const welcomeMessage: Message = {
         from: 'bot',
-        text: "👋 Hi! I'm here to help you recover your hacked or locked account. Which platform do you need help with?",
+        text: "👋 Hi! I'm Vanilla AI Bot, your account recovery assistant. I'm here to help you recover your hacked or locked account. Which platform do you need help with?",
         ts: new Date(),
         suggestions: [
           "My Facebook is hacked",
@@ -156,7 +181,7 @@ export default function ChatWidget() {
                 <div className="absolute bottom-0 right-0 w-3 h-3 bg-green-400 rounded-full border-2 border-primary-600"></div>
               </div>
               <div>
-                <h3 className="font-semibold">VSS Recovery Bot</h3>
+                <h3 className="font-semibold">Vanilla AI Bot</h3>
                 <p className="text-xs text-primary-100">Online • Instant replies</p>
               </div>
             </div>
@@ -220,6 +245,47 @@ export default function ChatWidget() {
 
             <div ref={messagesEndRef} />
           </div>
+
+          {/* Chat With Support Button */}
+          {!isPaidUser && (
+            <div className="px-4 py-2 bg-yellow-50 border-t border-yellow-200">
+              <button
+                onClick={() => {
+                  const paymentPrompt: Message = {
+                    from: 'bot',
+                    text: '💬 **Premium Chat Support**\n\nTo chat with our human support team, please complete payment first.\n\n✅ What you get:\n- Direct chat with recovery experts\n- Platform-specific recovery guides\n- Step-by-step instructions via email\n- Priority support\n\n**Price:** KES 1,500 (Basic) or KES 3,000 (Premium)\n\nClick below to start your recovery process!',
+                    ts: new Date(),
+                    suggestions: ['Start Recovery Process']
+                  };
+                  setMessages(prev => [...prev, paymentPrompt]);
+                }}
+                className="w-full bg-primary-600 text-white py-2 px-4 rounded-lg hover:bg-primary-700 transition text-sm font-medium"
+              >
+                💬 Chat With Support Team
+              </button>
+            </div>
+          )}
+
+          {isPaidUser && (
+            <div className="px-4 py-2 bg-green-50 border-t border-green-200">
+              <div className="flex items-center justify-between">
+                <span className="text-xs text-green-700">✅ Premium Support Active</span>
+                <button
+                  onClick={() => {
+                    const escalateMessage: Message = {
+                      from: 'bot',
+                      text: '🎯 Connecting you to our support team... A human agent will respond within 2 hours during business hours (Mon-Sat, 8 AM - 8 PM EAT).\n\nIn the meantime, what specific issue are you facing?',
+                      ts: new Date()
+                    };
+                    setMessages(prev => [...prev, escalateMessage]);
+                  }}
+                  className="text-xs bg-green-600 text-white py-1 px-3 rounded-full hover:bg-green-700 transition"
+                >
+                  Request Human Agent
+                </button>
+              </div>
+            </div>
+          )}
 
           {/* Input */}
           <div className="p-4 border-t border-gray-200 bg-white rounded-b-2xl">

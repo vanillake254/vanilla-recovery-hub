@@ -60,6 +60,11 @@ function RecoverPageContent() {
 
       const { paymentLink } = paymentResponse.data.data;
 
+      // Store user info for chat access after payment
+      localStorage.setItem('userEmail', formData.email);
+      localStorage.setItem('userPhone', formData.phone);
+      localStorage.setItem('userPlatform', formData.platform);
+
       toast.success('Redirecting to payment...');
 
       // Redirect to payment page

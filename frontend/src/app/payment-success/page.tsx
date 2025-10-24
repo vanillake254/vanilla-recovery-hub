@@ -27,6 +27,13 @@ function PaymentSuccessContent() {
       const response = await axios.get(`${API_URL}/api/payments/verify/${ref}`);
       if (response.data.data.paymentStatus === 'successful') {
         setVerified(true);
+        
+        // Get user email from URL params or request
+        const email = searchParams.get('email');
+        if (email) {
+          localStorage.setItem('userEmail', email);
+          localStorage.setItem('paymentVerified', 'true');
+        }
       }
     } catch (error) {
       console.error('Payment verification failed:', error);

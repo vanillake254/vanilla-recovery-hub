@@ -221,3 +221,43 @@ export const verifyPayment = asyncHandler(async (req: Request, res: Response, ne
     }
   });
 });
+
+/**
+ * Check if user has paid access for premium chat
+ */
+export const checkChatAccess = asyncHandler(async (req: Request, res: Response) => {
+  const { identifier } = req.params; // email or phone
+
+  // Find most recent successful payment for this user
+  const payment = await prisma.payment.findFirst({
+    where: {
+      request: {
+        OR: [
+          { email: identifier },
+          { phone: identifier }
+        ]
+      },
+      status: { in: ['SUCCESSFUL', 'PAID'] }
+    },
+    include: {
+      request: true
+    },
+    orderBy: { createdAt: 'desc' }
+  });
+
+  const hasPaidAccess = !!payment;
+  const thirtyDaysAgo = new Date();
+  thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+
+  // Check if payment is within 30 days
+  const isActive = payment ? payment.createdAt > thirtyDaysAgo : false;
+
+  res.status(200).json({
+    success: true,
+    hasPaidAccess: hasPaidAccess && isActive,
+    tier: payment?.request?.tier || null,
+    platform: payment?.request?.platform || null,
+    paymentDate: payment?.createdAt || null,
+    expiresAt: payment ? new Date(payment.createdAt.getTime() + 30 * 24 * 60 * 60 * 1000) : null
+  });
+});
