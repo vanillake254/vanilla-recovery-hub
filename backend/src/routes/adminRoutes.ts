@@ -5,7 +5,21 @@ import { authenticateToken, requireAdmin } from '../middleware/auth';
 
 const router = express.Router();
 
-// All admin routes require authentication
+/**
+ * @route   POST /api/admin/login
+ * @desc    Admin login (for testing - in production, use Firebase Auth)
+ * @access  Public
+ */
+router.post(
+  '/login',
+  [
+    body('email').isEmail().withMessage('Valid email is required'),
+    body('password').notEmpty().withMessage('Password is required')
+  ],
+  adminController.adminLogin
+);
+
+// All admin routes below require authentication
 router.use(authenticateToken, requireAdmin);
 
 /**
@@ -77,17 +91,32 @@ router.post(
 router.get('/dashboard/stats', adminController.getDashboardStats);
 
 /**
- * @route   POST /api/admin/login
- * @desc    Admin login (for testing - in production, use Firebase Auth)
- * @access  Public
+ * @route   GET /api/admin/bot/training
+ * @desc    Get all bot training data
+ * @access  Admin
+ */
+router.get('/bot/training', adminController.getBotTraining);
+
+/**
+ * @route   POST /api/admin/bot/training
+ * @desc    Add new bot training intent
+ * @access  Admin
  */
 router.post(
-  '/login',
+  '/bot/training',
   [
-    body('email').isEmail().withMessage('Valid email is required'),
-    body('password').notEmpty().withMessage('Password is required')
+    body('patterns').isArray().withMessage('Patterns must be an array'),
+    body('responses').isArray().withMessage('Responses must be an array'),
+    body('name').optional().isString()
   ],
-  adminController.adminLogin
+  adminController.addBotTraining
 );
+
+/**
+ * @route   DELETE /api/admin/bot/training/:intentName
+ * @desc    Delete bot training intent
+ * @access  Admin
+ */
+router.delete('/bot/training/:intentName', adminController.deleteBotTraining);
 
 export default router;

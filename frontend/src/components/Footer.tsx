@@ -75,17 +75,11 @@ export default function Footer() {
             <h4 className="font-semibold text-white mb-4">Contact Us</h4>
             <ul className="space-y-3 text-sm">
               <li className="flex items-start space-x-2">
-                <FiMail className="w-5 h-5 text-primary-400 flex-shrink-0 mt-0.5" />
-                <div>
-                  <div>support@vanillarecoveryhub.com</div>
-                  <div className="text-gray-500">24/7 support</div>
-                </div>
-              </li>
-              <li className="flex items-start space-x-2">
                 <FiMapPin className="w-5 h-5 text-primary-400 flex-shrink-0 mt-0.5" />
                 <div>
-                  <div>Nairobi, Kenya</div>
-                  <div className="text-gray-500">Mon-Sat: 8 AM - 8 PM EAT</div>
+                  <div className="font-medium text-white">Nairobi, Kenya</div>
+                  <div className="text-gray-400 mt-1">Open 24/7</div>
+                  <div className="text-primary-400 text-xs mt-1">Always available to help</div>
                 </div>
               </li>
             </ul>

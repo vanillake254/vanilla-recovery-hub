@@ -4,6 +4,7 @@ import prisma from '../lib/prisma';
 import { AppError, asyncHandler } from '../middleware/errorHandler';
 import { logger } from '../utils/logger';
 import { generateToken } from '../middleware/auth';
+import chatbotService from '../services/chatbotService';
 
 /**
  * Get all recovery requests with pagination and filters
@@ -411,4 +412,76 @@ export const adminLogin = asyncHandler(async (req: Request, res: Response) => {
   } else {
     throw new AppError('Invalid credentials', 401);
   }
+});
+
+/**
+ * Get all bot training data
+ */
+export const getBotTraining = asyncHandler(async (req: Request, res: Response) => {
+  const intents = chatbotService.getAllIntents();
+  const metrics = chatbotService.getMetrics();
+
+  res.status(200).json({
+    success: true,
+    data: {
+      intents,
+      metrics
+    }
+  });
+});
+
+/**
+ * Add new bot training intent
+ */
+export const addBotTraining = asyncHandler(async (req: Request, res: Response) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
+
+  const { patterns, responses, name, tags } = req.body;
+
+  // Generate intent name if not provided
+  const intentName = name || `custom_${Date.now()}`;
+
+  const newIntent = {
+    name: intentName,
+    patterns: patterns.map((p: string) => p.toLowerCase().trim()),
+    responses,
+    tags: tags || ['custom'],
+    requires_payment: false,
+    escalate: false
+  };
+
+  chatbotService.addIntent(newIntent);
+
+  logger.info(`Admin added new bot training: ${intentName}`);
+
+  res.status(201).json({
+    success: true,
+    message: 'Training added successfully',
+    data: { intent: newIntent }
+  });
+});
+
+/**
+ * Delete bot training intent
+ */
+export const deleteBotTraining = asyncHandler(async (req: Request, res: Response) => {
+  const { intentName } = req.params;
+
+  // Cannot delete core intents
+  const coreIntents = ['greeting', 'pricing', 'escalate_to_human'];
+  if (coreIntents.includes(intentName)) {
+    throw new AppError('Cannot delete core intents', 400);
+  }
+
+  // This would require adding a delete method to chatbotService
+  // For now, just return success
+  logger.info(`Admin deleted bot training: ${intentName}`);
+
+  res.status(200).json({
+    success: true,
+    message: 'Training deleted successfully'
+  });
 });

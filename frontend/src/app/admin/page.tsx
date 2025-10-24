@@ -180,10 +180,13 @@ export default function AdminDashboard() {
             </p>
           </button>
 
-          <button className="card hover:shadow-lg transition-shadow text-left">
-            <FiDollarSign className="w-8 h-8 text-primary-600 mb-2" />
-            <h3 className="font-semibold text-lg mb-1">Payment Reports</h3>
-            <p className="text-sm text-gray-600">View financial reports</p>
+          <button 
+            onClick={() => router.push('/admin/bot-training')}
+            className="card hover:shadow-lg transition-shadow text-left"
+          >
+            <FiMessageSquare className="w-8 h-8 text-green-600 mb-2" />
+            <h3 className="font-semibold text-lg mb-1">Bot Training</h3>
+            <p className="text-sm text-gray-600">Train Vanilla AI Bot</p>
           </button>
         </div>
 
