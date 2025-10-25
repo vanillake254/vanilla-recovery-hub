@@ -8,10 +8,6 @@ import { FiChevronLeft, FiSend, FiUser, FiMail, FiPhone, FiShield } from 'react-
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
-export function generateStaticParams() {
-  return [];
-}
-
 interface Request {
   id: string;
   platform: string;
