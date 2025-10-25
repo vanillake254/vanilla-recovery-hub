@@ -19,14 +19,14 @@ interface Stats {
 }
 
 interface Request {
-  _id: string;
+  id: string;
   platform: string;
   status: string;
-  paymentStatus: string;
   createdAt: string;
-  userId: {
+  user: {
     name: string;
     email: string;
+    phone: string;
   };
 }
 
@@ -70,21 +70,12 @@ export default function AdminDashboard() {
 
   const getStatusBadge = (status: string) => {
     const badges: Record<string, string> = {
-      new: 'badge-info',
-      in_progress: 'badge-warning',
-      resolved: 'badge-success',
-      failed: 'badge-error',
+      NEW: 'bg-blue-100 text-blue-700',
+      IN_PROGRESS: 'bg-yellow-100 text-yellow-700',
+      RESOLVED: 'bg-green-100 text-green-700',
+      FAILED: 'bg-red-100 text-red-700',
     };
-    return badges[status] || 'badge-info';
-  };
-
-  const getPaymentBadge = (status: string) => {
-    const badges: Record<string, string> = {
-      pending: 'badge-warning',
-      paid: 'badge-success',
-      failed: 'badge-error',
-    };
-    return badges[status] || 'badge-warning';
+    return badges[status] || 'bg-gray-100 text-gray-700';
   };
 
   if (loading) {
@@ -209,33 +200,28 @@ export default function AdminDashboard() {
                   <th className="pb-3 font-semibold">Customer</th>
                   <th className="pb-3 font-semibold">Platform</th>
                   <th className="pb-3 font-semibold">Status</th>
-                  <th className="pb-3 font-semibold">Payment</th>
                   <th className="pb-3 font-semibold">Date</th>
                   <th className="pb-3 font-semibold">Action</th>
                 </tr>
               </thead>
               <tbody>
                 {recentRequests.map((request) => (
-                  <tr key={request._id} className="border-b border-gray-100">
+                  <tr key={request.id} className="border-b border-gray-100">
                     <td className="py-4">
                       <div>
-                        <p className="font-medium text-gray-900">{request.userId.name}</p>
-                        <p className="text-sm text-gray-500">{request.userId.email}</p>
+                        <p className="font-medium text-gray-900">{request.user.name}</p>
+                        <p className="text-sm text-gray-500">{request.user.email}</p>
+                        <p className="text-xs text-gray-400">{request.user.phone}</p>
                       </div>
                     </td>
                     <td className="py-4">
                       <span className="capitalize font-medium text-gray-700">
-                        {request.platform}
+                        {request.platform.toLowerCase()}
                       </span>
                     </td>
                     <td className="py-4">
-                      <span className={`badge ${getStatusBadge(request.status)}`}>
+                      <span className={`px-2 py-1 rounded-full text-xs font-semibold ${getStatusBadge(request.status)}`}>
                         {request.status.replace('_', ' ')}
-                      </span>
-                    </td>
-                    <td className="py-4">
-                      <span className={`badge ${getPaymentBadge(request.paymentStatus)}`}>
-                        {request.paymentStatus}
                       </span>
                     </td>
                     <td className="py-4 text-sm text-gray-600">
@@ -243,7 +229,7 @@ export default function AdminDashboard() {
                     </td>
                     <td className="py-4">
                       <button
-                        onClick={() => router.push(`/admin/requests/${request._id}`)}
+                        onClick={() => router.push(`/admin/requests/${request.id}`)}
                         className="text-primary-600 hover:text-primary-700 font-semibold text-sm"
                       >
                         View

@@ -213,6 +213,37 @@ export const verifyPayment = asyncHandler(async (req: Request, res: Response, ne
     throw new AppError('Payment not found', 404);
   }
 
+  // If payment is still pending, verify with Flutterwave directly
+  if (payment.status === 'PENDING' && payment.transactionId) {
+    try {
+      const verification = await paymentService.verifyPayment(payment.transactionId);
+      
+      if (verification.data.status === 'successful') {
+        // Update payment to successful
+        await prisma.payment.update({
+          where: { txRef: tx_ref },
+          data: {
+            status: 'SUCCESSFUL',
+            gatewayResponse: verification.data
+          }
+        });
+        
+        // Update request payment status
+        if (payment.request) {
+          await prisma.request.update({
+            where: { id: payment.request.id },
+            data: { paymentStatus: 'PAID' }
+          });
+        }
+        
+        payment.status = 'SUCCESSFUL';
+        logger.info(`Payment verified and updated: ${tx_ref}`);
+      }
+    } catch (error) {
+      logger.error('Flutterwave verification failed:', error);
+    }
+  }
+
   res.status(200).json({
     success: true,
     data: {
@@ -240,15 +271,21 @@ export const checkChatAccess = asyncHandler(async (req: Request, res: Response) 
   const payment = await prisma.payment.findFirst({
     where: {
       request: {
-        OR: [
-          { email: identifier },
-          { phone: identifier }
-        ]
+        user: {
+          OR: [
+            { email: identifier },
+            { phone: identifier }
+          ]
+        }
       },
       status: { in: ['SUCCESSFUL', 'PAID'] }
     },
     include: {
-      request: true
+      request: {
+        include: {
+          user: true
+        }
+      }
     },
     orderBy: { createdAt: 'desc' }
   });
@@ -266,6 +303,11 @@ export const checkChatAccess = asyncHandler(async (req: Request, res: Response) 
     tier: payment?.request?.tier || null,
     platform: payment?.request?.platform || null,
     paymentDate: payment?.createdAt || null,
-    expiresAt: payment ? new Date(payment.createdAt.getTime() + 30 * 24 * 60 * 60 * 1000) : null
+    expiresAt: payment ? new Date(payment.createdAt.getTime() + 30 * 24 * 60 * 60 * 1000) : null,
+    user: payment?.request?.user ? {
+      name: payment.request.user.name,
+      email: payment.request.user.email,
+      phone: payment.request.user.phone
+    } : null
   });
 });
