@@ -134,6 +134,25 @@ export default function BotTraining() {
     }
   };
 
+  const handleDeleteIntent = async (intentName: string) => {
+    if (!confirm(`Delete training intent "${intentName}"? This action cannot be undone.`)) {
+      return;
+    }
+
+    try {
+      const token = localStorage.getItem('adminToken');
+      await axios.delete(`${API_URL}/api/admin/bot/training/${intentName}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+
+      toast.success('Training deleted successfully!');
+      fetchTrainingData(token!);
+    } catch (error) {
+      toast.error('Failed to delete training');
+      console.error(error);
+    }
+  };
+
   if (loading) {
     return (
       <div className="p-8">
@@ -320,18 +339,29 @@ export default function BotTraining() {
         <h3 className="text-xl font-bold text-gray-900 mb-4">Existing Training Data</h3>
         <div className="space-y-4 max-h-96 overflow-y-auto">
           {intents.map((intent, index) => (
-            <div key={index} className="border border-gray-200 rounded-lg p-4">
+            <div key={index} className="border border-gray-200 rounded-lg p-4 hover:border-primary-300 transition-colors">
               <div className="flex items-start justify-between mb-2">
                 <h4 className="font-semibold text-gray-900">{intent.name}</h4>
-                {intent.tags && (
-                  <div className="flex space-x-1">
-                    {intent.tags.map((tag, i) => (
-                      <span key={i} className="text-xs px-2 py-1 bg-primary-100 text-primary-700 rounded">
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
-                )}
+                <div className="flex items-center space-x-2">
+                  {intent.tags && (
+                    <div className="flex space-x-1">
+                      {intent.tags.map((tag, i) => (
+                        <span key={i} className="text-xs px-2 py-1 bg-primary-100 text-primary-700 rounded">
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+                  )}
+                  {intent.tags?.includes('custom') && (
+                    <button
+                      onClick={() => handleDeleteIntent(intent.name)}
+                      className="p-1 hover:bg-red-50 rounded text-red-600"
+                      title="Delete intent"
+                    >
+                      <FiTrash2 className="w-4 h-4" />
+                    </button>
+                  )}
+                </div>
               </div>
               <div className="text-sm space-y-2">
                 <div>
