@@ -25,14 +25,24 @@ function PaymentSuccessContent() {
   const verifyPayment = async (ref: string) => {
     try {
       const response = await axios.get(`${API_URL}/api/payments/verify/${ref}`);
-      if (response.data.data.paymentStatus === 'successful') {
+      const data = response.data.data;
+      
+      if (data.paymentStatus === 'successful') {
         setVerified(true);
         
-        // Get user email from URL params or request
-        const email = searchParams.get('email');
-        if (email) {
-          localStorage.setItem('userEmail', email);
-          localStorage.setItem('paymentVerified', 'true');
+        // Save user info from payment data
+        if (data.request) {
+          const { email, phone, platform } = data.request;
+          if (email) {
+            localStorage.setItem('userEmail', email);
+            localStorage.setItem('paymentVerified', 'true');
+          }
+          if (phone) {
+            localStorage.setItem('userPhone', phone);
+          }
+          if (platform) {
+            localStorage.setItem('userPlatform', platform);
+          }
         }
       }
     } catch (error) {

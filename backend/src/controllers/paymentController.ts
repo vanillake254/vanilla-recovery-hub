@@ -199,25 +199,33 @@ export const verifyPayment = asyncHandler(async (req: Request, res: Response, ne
   const { tx_ref } = req.params;
 
   const payment = await prisma.payment.findUnique({
-    where: { txRef: tx_ref }
+    where: { txRef: tx_ref },
+    include: {
+      request: {
+        include: {
+          user: true
+        }
+      }
+    }
   });
   
   if (!payment) {
     throw new AppError('Payment not found', 404);
   }
 
-  const request = await prisma.request.findUnique({
-    where: { txRef: tx_ref }
-  });
-
   res.status(200).json({
     success: true,
     data: {
       tx_ref,
       paymentStatus: payment.status.toLowerCase(),
-      requestStatus: request?.status.toLowerCase(),
+      requestStatus: payment.request?.status.toLowerCase(),
       amount: payment.amount,
-      currency: payment.currency
+      currency: payment.currency,
+      request: payment.request ? {
+        email: payment.request.user.email,
+        phone: payment.request.user.phone,
+        platform: payment.request.platform
+      } : null
     }
   });
 });
