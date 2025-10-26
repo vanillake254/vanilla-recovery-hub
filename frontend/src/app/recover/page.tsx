@@ -35,7 +35,7 @@ function RecoverPageContent() {
   const plans = {
     basic: {
       name: 'Basic Recovery',
-      price: 1500,
+      price: 2000,
       features: [
         'Email guidance & step-by-step instructions',
         'Chat support for questions',
@@ -118,7 +118,7 @@ function RecoverPageContent() {
       toast.success('Request created! Initiating payment...');
 
       // Determine amount based on selected tier
-      const amount = selectedTier === 'premium' ? 3000 : 1500;
+      const amount = selectedTier === 'premium' ? 3000 : 2000;
 
       // Initiate payment
       const paymentResponse = await axios.post(`${API_URL}/api/payments/initiate`, {

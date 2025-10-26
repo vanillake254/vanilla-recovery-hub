@@ -37,18 +37,22 @@ export const createRequest = asyncHandler(async (req: Request, res: Response, ne
   const tx_ref = `VRH-${Date.now()}-${uuidv4().substring(0, 8).toUpperCase()}`;
 
   // Create recovery request
+  const requestData: any = {
+    userId: user.id,
+    platform: platform.toUpperCase(),
+    description: description || '',
+    hasEmailAccess: hasEmailAccess !== undefined ? hasEmailAccess : null,
+    status: 'NEW',
+    txRef: tx_ref,
+    paymentStatus: 'PENDING'
+  };
+
+  // Add tier and accountInfo only if they exist in the schema
+  if (tier) requestData.tier = tier;
+  if (accountInfo) requestData.accountInfo = accountInfo;
+
   const request = await prisma.request.create({
-    data: {
-      userId: user.id,
-      platform: platform.toUpperCase(),
-      tier: tier || 'basic',
-      description: description || '',
-      hasEmailAccess: hasEmailAccess !== undefined ? hasEmailAccess : null,
-      accountInfo: accountInfo || {},
-      status: 'NEW',
-      txRef: tx_ref,
-      paymentStatus: 'PENDING'
-    }
+    data: requestData
   });
 
   logger.info(`Recovery request created: ${request.id} for ${platform}`);
