@@ -145,9 +145,9 @@ function PaymentSuccessContent() {
                   <div className="flex items-start space-x-3">
                     <FiMail className="w-6 h-6 text-primary-600 flex-shrink-0 mt-1" />
                     <div>
-                      <h3 className="font-semibold text-gray-900">Check Your Email</h3>
+                      <h3 className="font-semibold text-gray-900">Await Contact via Email</h3>
                       <p className="text-gray-600 text-sm">
-                        We've sent detailed recovery instructions to your email. Check your inbox (and spam folder) now.
+                        <strong>Within 48 hours</strong>, Vanilla Recovery team will contact you via email with recovery instructions and next steps.
                       </p>
                     </div>
                   </div>
@@ -155,19 +155,19 @@ function PaymentSuccessContent() {
                   <div className="flex items-start space-x-3">
                     <FiMessageCircle className="w-6 h-6 text-primary-600 flex-shrink-0 mt-1" />
                     <div>
-                      <h3 className="font-semibold text-gray-900">Chat Support Unlocked</h3>
+                      <h3 className="font-semibold text-gray-900">WhatsApp Communication</h3>
                       <p className="text-gray-600 text-sm">
-                        Our premium chatbot is now available for all your questions. Click the chat icon anytime!
+                        You may also receive a message on WhatsApp from our team <strong>within 48 hours</strong>. Keep your phone accessible!
                       </p>
                     </div>
                   </div>
 
                   <div className="flex items-start space-x-3">
-                    <span className="text-2xl flex-shrink-0">👥</span>
+                    <span className="text-2xl flex-shrink-0">📋</span>
                     <div>
-                      <h3 className="font-semibold text-gray-900">Our Team Will Contact You</h3>
+                      <h3 className="font-semibold text-gray-900">Track Your Request</h3>
                       <p className="text-gray-600 text-sm">
-                        Expect an email or call from our recovery team within 24 hours. Check your phone!
+                        Use the button below to track your recovery request and chat with our team anytime.
                       </p>
                     </div>
                   </div>

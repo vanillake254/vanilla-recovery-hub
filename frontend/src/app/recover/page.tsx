@@ -1,7 +1,7 @@
 'use client';
 
-import { Suspense, useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { Suspense, useState, useEffect } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import axios from 'axios';
 import toast from 'react-hot-toast';
 import Navbar from '@/components/Navbar';
@@ -12,8 +12,19 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 function RecoverPageContent() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const tierFromUrl = searchParams.get('tier');
   const [selectedTier, setSelectedTier] = useState<'basic' | 'premium'>('basic');
   const [activeTab, setActiveTab] = useState<'new' | 'existing'>('new');
+  
+  // Set tier from URL parameter
+  useEffect(() => {
+    if (tierFromUrl === 'premium') {
+      setSelectedTier('premium');
+    } else if (tierFromUrl === 'basic') {
+      setSelectedTier('basic');
+    }
+  }, [tierFromUrl]);
   
   // New customer form
   const [formData, setFormData] = useState({
