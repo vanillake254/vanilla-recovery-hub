@@ -232,7 +232,7 @@ export default function AdminRequestsPage() {
                         </td>
                         <td className="py-4">
                           <button
-                            onClick={() => router.push(`/admin/requests/${request.id}`)}
+                            onClick={() => router.push(`/admin/request-details?id=${request.id}`)}
                             className="text-primary-600 hover:text-primary-700 font-semibold text-sm"
                           >
                             View Details

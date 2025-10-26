@@ -161,8 +161,8 @@ export default function AdminDashboard() {
           </button>
 
           <button
-            onClick={() => router.push('/admin/chat')}
-            className="card hover:shadow-lg transition-shadow text-left"
+            onClick={() => router.push('/admin/escalated-chats')}
+            className="card hover:shadow-xl transition-shadow cursor-pointer text-left"
           >
             <FiMessageSquare className="w-8 h-8 text-primary-600 mb-2" />
             <h3 className="font-semibold text-lg mb-1">Escalated Chats</h3>
@@ -229,7 +229,7 @@ export default function AdminDashboard() {
                     </td>
                     <td className="py-4">
                       <button
-                        onClick={() => router.push(`/admin/requests/${request.id}`)}
+                        onClick={() => router.push(`/admin/request-details?id=${request.id}`)}
                         className="text-primary-600 hover:text-primary-700 font-semibold text-sm"
                       >
                         View

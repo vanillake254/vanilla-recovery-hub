@@ -135,11 +135,19 @@ function RecoverPageContent() {
 
       toast.success('Redirecting to payment...');
 
-      // Redirect to payment page
-      window.location.href = paymentLink;
+      // Add small delay to ensure storage is saved, then redirect
+      setTimeout(() => {
+        if (paymentLink) {
+          window.location.href = paymentLink;
+        } else {
+          toast.error('Payment link not received. Please try again.');
+          setLoading(false);
+        }
+      }, 500);
     } catch (error: any) {
-      console.error('Error:', error);
-      toast.error(error.response?.data?.error || 'Something went wrong. Please try again.');
+      console.error('Payment error:', error);
+      const errorMessage = error.response?.data?.error || error.message || 'Failed to process payment. Please try again.';
+      toast.error(errorMessage);
       setLoading(false);
     }
   };
