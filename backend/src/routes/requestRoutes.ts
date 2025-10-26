@@ -41,6 +41,13 @@ router.get('/:id', requestController.getRequest);
 router.get('/track/:txRef', requestController.trackRequest);
 
 /**
+ * @route   GET /api/requests/user/:identifier
+ * @desc    Get all requests for a user by email or phone
+ * @access  Public
+ */
+router.get('/user/:identifier', requestController.getUserRequests);
+
+/**
  * @route   POST /api/requests/:id/message
  * @desc    Customer sends message about their request
  * @access  Public

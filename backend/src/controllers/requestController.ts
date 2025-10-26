@@ -168,6 +168,75 @@ export const trackRequest = asyncHandler(async (req: Request, res: Response, nex
 });
 
 /**
+ * Get all requests for a user by email or phone
+ */
+export const getUserRequests = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+  const { identifier } = req.params;
+
+  // Find user by email or phone
+  const user = await prisma.user.findFirst({
+    where: {
+      OR: [
+        { email: identifier },
+        { phone: identifier }
+      ]
+    }
+  });
+
+  if (!user) {
+    return res.status(200).json({
+      success: true,
+      data: {
+        requests: [],
+        message: 'No requests found for this email/phone'
+      }
+    });
+  }
+
+  // Get all requests for this user
+  const requests = await prisma.request.findMany({
+    where: { userId: user.id },
+    include: {
+      user: {
+        select: {
+          name: true,
+          email: true,
+          phone: true
+        }
+      },
+      notes: {
+        include: {
+          user: {
+            select: {
+              name: true,
+              email: true
+            }
+          }
+        },
+        orderBy: {
+          createdAt: 'desc'
+        }
+      }
+    },
+    orderBy: {
+      createdAt: 'desc'
+    }
+  });
+
+  res.status(200).json({
+    success: true,
+    data: {
+      requests,
+      user: {
+        name: user.name,
+        email: user.email,
+        phone: user.phone
+      }
+    }
+  });
+});
+
+/**
  * Customer adds message to their request
  */
 export const addCustomerMessage = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {

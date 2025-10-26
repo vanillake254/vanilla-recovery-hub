@@ -27,7 +27,6 @@ function RecoverPageContent() {
 
   // Existing customer lookup
   const [lookupIdentifier, setLookupIdentifier] = useState('');
-  const [lookupResult, setLookupResult] = useState<any>(null);
   const [lookupLoading, setLookupLoading] = useState(false);
 
   const [loading, setLoading] = useState(false);
@@ -72,31 +71,12 @@ function RecoverPageContent() {
     }
 
     setLookupLoading(true);
-    setLookupResult(null);
 
     try {
-      const response = await axios.get(`${API_URL}/api/payments/check-access/${lookupIdentifier}`);
-      
-      if (response.data.hasPaidAccess) {
-        setLookupResult({
-          found: true,
-          ...response.data
-        });
-        toast.success('Payment record found!');
-      } else {
-        setLookupResult({
-          found: false,
-          message: 'Payment record not found. Issue might be solved or subscription expired.'
-        });
-        toast.error('No active payment found');
-      }
+      // Redirect to my-requests page to show all requests for this user
+      router.push(`/my-requests?identifier=${encodeURIComponent(lookupIdentifier)}`);
     } catch (error) {
-      setLookupResult({
-        found: false,
-        message: 'Payment record not found. Issue might be solved or subscription expired.'
-      });
-      toast.error('No payment record found');
-    } finally {
+      toast.error('Failed to load your requests');
       setLookupLoading(false);
     }
   };
@@ -500,66 +480,6 @@ function RecoverPageContent() {
                       </div>
                     </div>
 
-                    {/* Lookup Result */}
-                    {lookupResult && (
-                      <div className={`p-6 rounded-lg border-2 ${
-                        lookupResult.found 
-                          ? 'bg-green-50 border-green-200' 
-                          : 'bg-yellow-50 border-yellow-200'
-                      }`}>
-                        {lookupResult.found ? (
-                          <div>
-                            <div className="flex items-center mb-4">
-                              <FiCheck className="w-6 h-6 text-green-600 mr-2" />
-                              <h3 className="text-lg font-bold text-green-900">Payment Record Found!</h3>
-                            </div>
-                            <div className="space-y-2 text-sm">
-                              <div className="flex justify-between">
-                                <span className="text-gray-700">Plan:</span>
-                                <span className="font-semibold text-gray-900">{lookupResult.tier?.toUpperCase()}</span>
-                              </div>
-                              <div className="flex justify-between">
-                                <span className="text-gray-700">Platform:</span>
-                                <span className="font-semibold text-gray-900">{lookupResult.platform?.toUpperCase()}</span>
-                              </div>
-                              <div className="flex justify-between">
-                                <span className="text-gray-700">Payment Date:</span>
-                                <span className="font-semibold text-gray-900">
-                                  {new Date(lookupResult.paymentDate).toLocaleDateString()}
-                                </span>
-                              </div>
-                              <div className="flex justify-between">
-                                <span className="text-gray-700">Expires:</span>
-                                <span className="font-semibold text-gray-900">
-                                  {new Date(lookupResult.expiresAt).toLocaleDateString()}
-                                </span>
-                              </div>
-                            </div>
-                            <div className="mt-4 pt-4 border-t border-green-200">
-                              <p className="text-sm text-green-800">
-                                ✅ Your premium chat support is active! Open the chat widget to get help from our team.
-                              </p>
-                            </div>
-                          </div>
-                        ) : (
-                          <div>
-                            <div className="flex items-center mb-4">
-                              <FiAlertCircle className="w-6 h-6 text-yellow-600 mr-2" />
-                              <h3 className="text-lg font-bold text-yellow-900">No Active Payment Found</h3>
-                            </div>
-                            <p className="text-sm text-yellow-800 mb-4">
-                              {lookupResult.message}
-                            </p>
-                            <button
-                              onClick={() => setActiveTab('new')}
-                              className="btn btn-primary w-full"
-                            >
-                              Start New Recovery
-                            </button>
-                          </div>
-                        )}
-                      </div>
-                    )}
                   </div>
                 </div>
               )}
