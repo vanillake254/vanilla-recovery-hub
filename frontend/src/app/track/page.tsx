@@ -303,14 +303,10 @@ function TrackRequestContent() {
             </p>
           </div>
 
-          {/* Support Info */}
-          <div className="card mt-6 bg-yellow-50 border-yellow-200">
-            <h3 className="font-semibold text-gray-900 mb-2">Need Immediate Help?</h3>
-            <p className="text-sm text-gray-700">
-              Email us at: <a href="mailto:support@vanillarecoveryhub.com" className="text-primary-600 font-semibold">support@vanillarecoveryhub.com</a>
-            </p>
-            <p className="text-sm text-gray-700 mt-1">
-              Reference your transaction ID: <span className="font-mono font-semibold">{request.txRef}</span>
+          {/* Transaction Reference */}
+          <div className="card mt-6 bg-gray-50 border-gray-200">
+            <p className="text-sm text-gray-600">
+              Transaction ID: <span className="font-mono font-semibold text-gray-900">{request.txRef}</span>
             </p>
           </div>
         </div>

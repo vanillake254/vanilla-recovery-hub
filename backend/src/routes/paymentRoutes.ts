@@ -37,9 +37,16 @@ router.get('/verify/:tx_ref', paymentController.verifyPayment);
 
 /**
  * @route   GET /api/payments/check-access/:identifier
- * @desc    Check if user has paid access for premium chat
+ * @desc    Check if user has paid access by email or phone
  * @access  Public
  */
 router.get('/check-access/:identifier', paymentController.checkChatAccess);
+
+/**
+ * @route   POST /api/payments/update-pending
+ * @desc    Update pending payments by verifying with Flutterwave
+ * @access  Admin
+ */
+router.post('/update-pending', paymentController.updatePendingPayments);
 
 export default router;

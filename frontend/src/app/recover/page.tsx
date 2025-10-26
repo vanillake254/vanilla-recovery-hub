@@ -323,7 +323,7 @@ function RecoverPageContent() {
 
                         <div>
                           <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Phone Number (Kenyan) *
+                            Phone Number (International Format) *
                           </label>
                           <input
                             type="tel"
@@ -332,8 +332,11 @@ function RecoverPageContent() {
                             onChange={handleChange}
                             required
                             className="input"
-                            placeholder="+254712345678 or 0712345678"
+                            placeholder="+254712345678"
                           />
+                          <p className="text-xs text-blue-600 mt-1">
+                            💡 Use international format starting with + (e.g., +254712345678)
+                          </p>
                         </div>
                       </div>
                     </div>
