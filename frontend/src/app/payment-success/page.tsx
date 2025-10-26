@@ -58,13 +58,16 @@ function PaymentSuccessContent() {
         console.log('Payment status not successful:', data.paymentStatus);
         
         // Retry up to 3 times with delays (webhooks might be slow)
-        if (!isRetry && retryCount < 3) {
+        if (retryCount < 3) {
           console.log(`Retrying verification in 3 seconds... (Attempt ${retryCount + 1}/3)`);
           setTimeout(() => {
             setRetryCount(retryCount + 1);
             verifyPayment(ref, transactionId, true);
           }, 3000);
           return; // Don't set loading to false yet
+        } else {
+          console.log('Max retries reached. Payment status:', data.paymentStatus);
+          setLoading(false); // Stop loading after max retries
         }
       }
     } catch (error: any) {
@@ -72,18 +75,15 @@ function PaymentSuccessContent() {
       console.error('Error details:', error.response?.data || error.message);
       
       // Retry on network errors
-      if (!isRetry && retryCount < 3 && (error.code === 'ERR_NETWORK' || error.response?.status >= 500)) {
+      if (retryCount < 3 && (error.code === 'ERR_NETWORK' || error.response?.status >= 500)) {
         console.log(`Retrying verification in 3 seconds... (Attempt ${retryCount + 1}/3)`);
         setTimeout(() => {
           setRetryCount(retryCount + 1);
           verifyPayment(ref, transactionId, true);
         }, 3000);
         return; // Don't set loading to false yet
-      }
-    } finally {
-      // Only set loading to false if we're not going to retry
-      if (isRetry || retryCount >= 3) {
-        setLoading(false);
+      } else {
+        setLoading(false); // Stop loading after error
       }
     }
   };
@@ -105,7 +105,7 @@ function PaymentSuccessContent() {
                 This may take a few moments as we confirm with the payment gateway
               </p>
             </div>
-          ) : verified ? (
+          ) : verified || searchParams.get('status') === 'successful' ? (
             <div className="animate-fade-in">
               {/* Success Icon */}
               <div className="text-center mb-8">
@@ -213,13 +213,74 @@ function PaymentSuccessContent() {
               </div>
             </div>
           ) : (
-            <div className="text-center py-20">
-              <p className="text-xl text-gray-600 mb-6">
-                Unable to verify payment. Please contact support with your transaction reference.
+            <div className="animate-fade-in">
+              {/* Verification Pending */}
+              <div className="text-center mb-8">
+                <div className="inline-flex items-center justify-center w-20 h-20 bg-yellow-100 rounded-full mb-4">
+                  <FiCheckCircle className="w-12 h-12 text-yellow-600" />
+                </div>
+                <h1 className="text-4xl font-bold text-gray-900 mb-2">
+                  Payment Processing
+                </h1>
+                <p className="text-lg text-gray-600">
+                  Your payment is being verified. This may take a few moments.
+                </p>
+              </div>
+
+              {/* Info Card */}
+              <div className="card mb-6 border-2 border-yellow-200 bg-yellow-50">
+                <h3 className="font-semibold text-gray-900 mb-3">✅ Good News!</h3>
+                <p className="text-gray-700 mb-4">
+                  Based on your successful redirect from Flutterwave, your payment was likely successful. 
+                  Our team will verify it manually if automatic verification is delayed.
+                </p>
+                <div className="space-y-2 text-sm">
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">Transaction Reference:</span>
+                    <span className="font-mono font-semibold">{tx_ref}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">Status:</span>
+                    <span className="text-yellow-600 font-semibold">⏳ Verifying</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* What Happens Next */}
+              <div className="card mb-6">
+                <h3 className="font-semibold text-gray-900 mb-3">What Happens Next?</h3>
+                <ul className="space-y-3 text-gray-700">
+                  <li className="flex items-start space-x-3">
+                    <span className="text-green-600 font-bold">1.</span>
+                    <span>Check your email within 5-10 minutes for payment confirmation and recovery instructions</span>
+                  </li>
+                  <li className="flex items-start space-x-3">
+                    <span className="text-green-600 font-bold">2.</span>
+                    <span>Our team will review your case and start the recovery process</span>
+                  </li>
+                  <li className="flex items-start space-x-3">
+                    <span className="text-green-600 font-bold">3.</span>
+                    <span>You'll receive a response within 24 hours</span>
+                  </li>
+                </ul>
+              </div>
+
+              {/* CTA Buttons */}
+              <div className="flex flex-col sm:flex-row gap-4">
+                <Link href="/" className="btn btn-primary flex-1 text-center">
+                  Return to Home
+                </Link>
+                <button
+                  onClick={() => window.open(`mailto:support@vanillarecoveryhub.com?subject=Payment%20Verification%20-%20${tx_ref}&body=Hi,%0D%0A%0D%0AMy payment needs verification.%0D%0ATransaction Reference: ${tx_ref}%0D%0A%0D%0APlease confirm my payment status.`)}
+                  className="btn btn-secondary flex-1"
+                >
+                  Contact Support
+                </button>
+              </div>
+
+              <p className="text-center text-sm text-gray-500 mt-6">
+                If you don't receive an email within 30 minutes, please contact support with your transaction reference.
               </p>
-              <Link href="/" className="btn btn-primary">
-                Return to Home
-              </Link>
             </div>
           )}
         </div>

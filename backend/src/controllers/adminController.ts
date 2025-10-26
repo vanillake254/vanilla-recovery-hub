@@ -124,7 +124,7 @@ export const addComment = asyncHandler(async (req: Request, res: Response) => {
 
   const { id } = req.params;
   const { text } = req.body;
-  const adminId = req.user._id;
+  const adminId = req.user.id; // Prisma uses 'id' not '_id'
 
   const request = await prisma.request.findUnique({ 
     where: { id },
