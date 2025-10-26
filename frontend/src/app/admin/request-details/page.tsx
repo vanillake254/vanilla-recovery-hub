@@ -326,10 +326,8 @@ function RequestDetailsContent() {
               <h3 className="text-lg font-bold text-gray-900 mb-4">Quick Contact</h3>
               <div className="space-y-2">
                 <a
-                  href={`mailto:${request.user.email}?subject=Recovery Support - ${request.platform}`}
+                  href={`mailto:${request.user.email}?subject=Recovery Support - ${request.platform} (Request: ${request.id.substring(0, 8)})&body=Hi ${request.user.name},%0D%0A%0D%0ARegarding your ${request.platform} account recovery request...%0D%0A%0D%0ARequest ID: ${request.id}%0D%0ATransaction Ref: ${request.txRef}%0D%0A%0D%0ABest regards,%0D%0AVanilla Recovery Hub Team`}
                   className="btn btn-secondary w-full text-left flex items-center space-x-2"
-                  target="_blank"
-                  rel="noopener noreferrer"
                 >
                   <FiMail />
                   <span>Email Customer</span>

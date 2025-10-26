@@ -126,7 +126,13 @@ export const addComment = asyncHandler(async (req: Request, res: Response) => {
   const { text } = req.body;
   const adminId = req.user._id;
 
-  const request = await prisma.request.findUnique({ where: { id } });
+  const request = await prisma.request.findUnique({ 
+    where: { id },
+    include: {
+      user: true
+    }
+  });
+  
   if (!request) {
     throw new AppError('Request not found', 404);
   }
@@ -139,6 +145,20 @@ export const addComment = asyncHandler(async (req: Request, res: Response) => {
       text
     }
   });
+
+  // Send email to customer
+  try {
+    await emailService.sendAdminMessage(
+      request.user.email,
+      request.user.name,
+      text,
+      request.platform.toLowerCase(),
+      request.id
+    );
+    logger.info(`Admin message sent to customer ${request.user.email}`);
+  } catch (error) {
+    logger.error('Failed to send admin message email:', error);
+  }
 
   // Fetch updated request with notes
   const updatedRequest = await prisma.request.findUnique({

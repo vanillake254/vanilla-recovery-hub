@@ -15,9 +15,12 @@ router.post(
     body('name').trim().notEmpty().withMessage('Name is required'),
     body('email').isEmail().withMessage('Valid email is required'),
     body('phone').matches(/^(\+254|254|0)[17]\d{8}$/).withMessage('Valid Kenyan phone number required'),
-    body('platform').isIn(['facebook', 'instagram', 'gmail', 'tiktok', 'youtube', 'twitter', 'whatsapp', 'other'])
-      .withMessage('Invalid platform'),
-    body('description').trim().notEmpty().withMessage('Description is required'),
+    body('platform').custom((value) => {
+      const validPlatforms = ['facebook', 'instagram', 'gmail', 'tiktok', 'youtube', 'twitter', 'whatsapp', 'other', 
+                             'FACEBOOK', 'INSTAGRAM', 'GMAIL', 'TIKTOK', 'YOUTUBE', 'TWITTER', 'WHATSAPP', 'OTHER'];
+      return validPlatforms.includes(value);
+    }).withMessage('Invalid platform'),
+    body('description').optional().trim(),
     body('hasEmailAccess').optional().isBoolean()
   ],
   requestController.createRequest

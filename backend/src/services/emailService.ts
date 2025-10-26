@@ -182,6 +182,77 @@ class EmailService {
   }
 
   /**
+   * Send admin message to customer
+   */
+  async sendAdminMessage(
+    to: string,
+    name: string,
+    message: string,
+    platform: string,
+    requestId: string
+  ): Promise<void> {
+    try {
+      await this.resend.emails.send({
+        from: this.fromEmail,
+        to,
+        subject: '📨 New Message from Vanilla Recovery Hub Support',
+        html: `
+          <!DOCTYPE html>
+          <html>
+          <head>
+            <style>
+              body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+              .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+              .header { background: #4F46E5; color: white; padding: 20px; text-align: center; border-radius: 8px 8px 0 0; }
+              .content { background: #f9f9f9; padding: 30px; border-radius: 0 0 8px 8px; }
+              .message-box { background: white; border-left: 4px solid #4F46E5; padding: 20px; margin: 20px 0; border-radius: 6px; }
+              .info-box { background: #E0E7FF; padding: 15px; margin: 20px 0; border-radius: 6px; }
+              .footer { text-align: center; color: #666; font-size: 12px; margin-top: 30px; padding-top: 20px; border-top: 1px solid #ddd; }
+            </style>
+          </head>
+          <body>
+            <div class="container">
+              <div class="header">
+                <h1>💬 Message from Support</h1>
+              </div>
+              <div class="content">
+                <p>Hi <strong>${name}</strong>,</p>
+                
+                <p>Our team has sent you an update regarding your <strong>${platform}</strong> account recovery request.</p>
+
+                <div class="message-box">
+                  <strong>Message from Support Team:</strong><br><br>
+                  ${message.replace(/\n/g, '<br>')}
+                </div>
+
+                <div class="info-box">
+                  <strong>💡 Need to reply?</strong><br>
+                  Simply reply to this email, and our team will get back to you within 24 hours.
+                </div>
+
+                <p><strong>Your Request ID:</strong> ${requestId}</p>
+
+                <p>Best regards,<br>
+                <strong>Vanilla Recovery Hub Support Team</strong></p>
+              </div>
+              <div class="footer">
+                <p>© ${new Date().getFullYear()} Vanilla Recovery Hub. All rights reserved.</p>
+                <p>Nairobi, Kenya | Always available to help</p>
+              </div>
+            </div>
+          </body>
+          </html>
+        `
+      });
+
+      logger.info(`Admin message email sent to ${to}`);
+    } catch (error) {
+      logger.error('Failed to send admin message email:', error);
+      throw error;
+    }
+  }
+
+  /**
    * Get platform-specific recovery steps
    */
   private getRecoverySteps(platform: string): string {
