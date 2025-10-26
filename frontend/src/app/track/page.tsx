@@ -215,46 +215,92 @@ function TrackRequestContent() {
             </div>
           </div>
 
-          {/* Messages from Team */}
-          {notes && notes.length > 0 && (
-            <div className="card mb-6">
-              <h2 className="text-xl font-bold text-gray-900 mb-4 flex items-center space-x-2">
-                <FiMessageSquare />
-                <span>Messages from Our Team</span>
-              </h2>
-              <div className="space-y-4">
-                {notes.map((note) => (
-                  <div key={note.id} className="bg-blue-50 border-l-4 border-primary-600 p-4 rounded">
-                    <p className="text-gray-900 mb-2">{note.text}</p>
-                    <p className="text-xs text-gray-600">
-                      {note.user.name} • {new Date(note.createdAt).toLocaleString()}
-                    </p>
-                  </div>
-                ))}
-              </div>
+          {/* Chat Messages */}
+          <div className="card mb-6">
+            <h2 className="text-xl font-bold text-gray-900 mb-4 flex items-center space-x-2">
+              <FiMessageSquare />
+              <span>Conversation</span>
+            </h2>
+            
+            {/* Chat Container */}
+            <div className="bg-gray-50 rounded-lg p-4 min-h-[400px] max-h-[600px] overflow-y-auto space-y-4">
+              {notes && notes.length > 0 ? (
+                notes.map((note) => {
+                  // Determine if message is from admin (team) or customer
+                  const isFromAdmin = note.user.name !== request.user.name;
+                  
+                  return (
+                    <div
+                      key={note.id}
+                      className={`flex ${isFromAdmin ? 'justify-start' : 'justify-end'}`}
+                    >
+                      <div
+                        className={`max-w-[70%] rounded-2xl px-4 py-3 shadow-sm ${
+                          isFromAdmin
+                            ? 'bg-white border border-gray-200'
+                            : 'bg-primary-600 text-white'
+                        }`}
+                      >
+                        {isFromAdmin && (
+                          <p className="text-xs font-semibold text-primary-600 mb-1">
+                            {note.user.name}
+                          </p>
+                        )}
+                        <p className={`text-sm ${isFromAdmin ? 'text-gray-900' : 'text-white'}`}>
+                          {note.text}
+                        </p>
+                        <p className={`text-xs mt-2 ${isFromAdmin ? 'text-gray-500' : 'text-primary-100'}`}>
+                          {new Date(note.createdAt).toLocaleTimeString('en-US', {
+                            hour: 'numeric',
+                            minute: '2-digit',
+                            hour12: true
+                          })}
+                        </p>
+                      </div>
+                    </div>
+                  );
+                })
+              ) : (
+                <div className="text-center text-gray-500 py-12">
+                  <FiMessageSquare className="w-12 h-12 mx-auto mb-3 text-gray-400" />
+                  <p>No messages yet. Start the conversation!</p>
+                </div>
+              )}
             </div>
-          )}
+          </div>
 
           {/* Send Message */}
           <div className="card">
-            <h2 className="text-xl font-bold text-gray-900 mb-4">Send a Message</h2>
-            <p className="text-sm text-gray-600 mb-4">
-              Have questions or updates? Send us a message and we'll respond via email.
+            <h2 className="text-xl font-bold text-gray-900 mb-4 flex items-center space-x-2">
+              <FiMessageSquare />
+              <span>Send a Message</span>
+            </h2>
+            <div className="flex space-x-2">
+              <textarea
+                value={message}
+                onChange={(e) => setMessage(e.target.value)}
+                placeholder="Type your message..."
+                className="flex-1 input min-h-[60px] resize-none"
+                disabled={sending}
+                onKeyPress={(e) => {
+                  if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    handleSendMessage();
+                  }
+                }}
+              />
+              <button
+                onClick={handleSendMessage}
+                disabled={sending || !message.trim()}
+                className="btn btn-primary px-6"
+                style={{ alignSelf: 'flex-end' }}
+              >
+                {sending ? '...' : 'Send'}
+              </button>
+            </div>
+            <p className="text-xs text-gray-500 mt-2">
+              💡 Press Enter to send, Shift+Enter for new line
             </p>
-            <textarea
-              value={message}
-              onChange={(e) => setMessage(e.target.value)}
-              placeholder="Type your message here..."
-              className="input min-h-[120px] resize-none mb-4"
-              disabled={sending}
-            />
-            <button
-              onClick={handleSendMessage}
-              disabled={sending || !message.trim()}
-              className="btn btn-primary w-full"
-            >
-              {sending ? 'Sending...' : 'Send Message'}
-            </button>
           </div>
 
           {/* Support Info */}

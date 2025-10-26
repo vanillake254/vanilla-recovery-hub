@@ -4,7 +4,7 @@ import { Suspense, useEffect, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import axios from 'axios';
 import toast from 'react-hot-toast';
-import { FiChevronLeft, FiSend, FiUser, FiMail, FiPhone, FiShield, FiClock } from 'react-icons/fi';
+import { FiChevronLeft, FiSend, FiUser, FiMail, FiPhone, FiShield, FiClock, FiMessageSquare } from 'react-icons/fi';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -24,12 +24,23 @@ interface Request {
   };
 }
 
+interface Note {
+  id: string;
+  text: string;
+  createdAt: string;
+  user: {
+    name: string;
+    email: string;
+  };
+}
+
 function RequestDetailsContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const requestId = searchParams.get('id');
   
   const [request, setRequest] = useState<Request | null>(null);
+  const [notes, setNotes] = useState<Note[]>([]);
   const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState('');
   const [sending, setSending] = useState(false);
@@ -54,7 +65,9 @@ function RequestDetailsContent() {
         headers: { Authorization: `Bearer ${token}` }
       });
       // Backend returns { request, payment, chatLogs } inside data
-      setRequest(response.data.data.request);
+      const requestData = response.data.data.request;
+      setRequest(requestData);
+      setNotes(requestData.notes || []);
     } catch (error) {
       toast.error('Failed to load request details');
       console.error('Request details error:', error);
@@ -248,34 +261,86 @@ function RequestDetailsContent() {
               </div>
             </div>
 
-            {/* Communication Section */}
+            {/* Chat Conversation */}
             <div className="card">
               <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center space-x-2">
-                <FiSend className="text-primary-600" />
-                <span>Send Message to Customer</span>
+                <FiMessageSquare className="text-primary-600" />
+                <span>Conversation with Customer</span>
               </h3>
-              <div className="space-y-3">
+              
+              {/* Chat Container */}
+              <div className="bg-gray-50 rounded-lg p-4 min-h-[400px] max-h-[600px] overflow-y-auto space-y-4 mb-4">
+                {notes && notes.length > 0 ? (
+                  notes.slice().reverse().map((note) => {
+                    // Determine if message is from admin or customer
+                    const isFromAdmin = note.user.email !== request.user.email;
+                    
+                    return (
+                      <div
+                        key={note.id}
+                        className={`flex ${isFromAdmin ? 'justify-end' : 'justify-start'}`}
+                      >
+                        <div
+                          className={`max-w-[70%] rounded-2xl px-4 py-3 shadow-sm ${
+                            isFromAdmin
+                              ? 'bg-primary-600 text-white'
+                              : 'bg-white border border-gray-200'
+                          }`}
+                        >
+                          {!isFromAdmin && (
+                            <p className="text-xs font-semibold text-gray-600 mb-1">
+                              {note.user.name}
+                            </p>
+                          )}
+                          <p className={`text-sm ${isFromAdmin ? 'text-white' : 'text-gray-900'}`}>
+                            {note.text}
+                          </p>
+                          <p className={`text-xs mt-2 ${isFromAdmin ? 'text-primary-100' : 'text-gray-500'}`}>
+                            {new Date(note.createdAt).toLocaleTimeString('en-US', {
+                              hour: 'numeric',
+                              minute: '2-digit',
+                              hour12: true
+                            })}
+                          </p>
+                        </div>
+                      </div>
+                    );
+                  })
+                ) : (
+                  <div className="text-center text-gray-500 py-12">
+                    <FiSend className="w-12 h-12 mx-auto mb-3 text-gray-400" />
+                    <p>No messages yet. Start the conversation!</p>
+                  </div>
+                )}
+              </div>
+              
+              {/* Send Message Input */}
+              <div className="flex space-x-2">
                 <textarea
                   value={message}
                   onChange={(e) => setMessage(e.target.value)}
-                  placeholder="Type your message to the customer here... They will receive it via email."
-                  className="input min-h-[120px] resize-none"
+                  placeholder="Type your message to the customer..."
+                  className="flex-1 input min-h-[60px] resize-none"
                   disabled={sending}
+                  onKeyPress={(e) => {
+                    if (e.key === 'Enter' && !e.shiftKey) {
+                      e.preventDefault();
+                      handleSendMessage();
+                    }
+                  }}
                 />
-                <div className="flex justify-between items-center">
-                  <p className="text-xs text-gray-500">
-                    📧 Message will be sent to: <span className="font-semibold">{request.user.email}</span>
-                  </p>
-                  <button
-                    onClick={handleSendMessage}
-                    disabled={sending || !message.trim()}
-                    className="btn btn-primary flex items-center space-x-2"
-                  >
-                    <FiSend />
-                    <span>{sending ? 'Sending...' : 'Send Message'}</span>
-                  </button>
-                </div>
+                <button
+                  onClick={handleSendMessage}
+                  disabled={sending || !message.trim()}
+                  className="btn btn-primary px-6"
+                  style={{ alignSelf: 'flex-end' }}
+                >
+                  {sending ? '...' : 'Send'}
+                </button>
               </div>
+              <p className="text-xs text-gray-500 mt-2">
+                💡 Press Enter to send, Shift+Enter for new line
+              </p>
             </div>
           </div>
 
