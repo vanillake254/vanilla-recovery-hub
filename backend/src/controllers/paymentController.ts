@@ -287,6 +287,58 @@ export const verifyPayment = asyncHandler(async (req: Request, res: Response, ne
 });
 
 /**
+ * Update pending payments - Admin only
+ */
+export const updatePendingPayments = asyncHandler(async (req: Request, res: Response) => {
+  const pendingPayments = await prisma.payment.findMany({
+    where: {
+      status: 'PENDING',
+      transactionId: { not: null }
+    },
+    include: {
+      request: { include: { user: true } }
+    }
+  });
+
+  let updatedCount = 0;
+
+  for (const payment of pendingPayments) {
+    try {
+      if (!payment.transactionId) continue;
+
+      const verification = await paymentService.verifyPayment(payment.transactionId);
+      
+      if (verification.data.status === 'successful') {
+        await prisma.payment.update({
+          where: { txRef: payment.txRef },
+          data: {
+            status: 'SUCCESSFUL',
+            flwRef: verification.data.flw_ref
+          }
+        });
+
+        if (payment.request) {
+          await prisma.request.update({
+            where: { id: payment.request.id },
+            data: { paymentStatus: 'PAID' }
+          });
+        }
+
+        updatedCount++;
+        logger.info(`Updated payment: ${payment.txRef}`);
+      }
+    } catch (error) {
+      logger.error(`Failed to update ${payment.txRef}:`, error);
+    }
+  }
+
+  res.status(200).json({
+    success: true,
+    message: `Updated ${updatedCount} of ${pendingPayments.length} pending payments`
+  });
+});
+
+/**
  * Check if user has paid access for premium chat
  */
 export const checkChatAccess = asyncHandler(async (req: Request, res: Response) => {
