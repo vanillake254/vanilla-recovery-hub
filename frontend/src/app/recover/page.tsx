@@ -109,6 +109,7 @@ function RecoverPageContent() {
       // Create recovery request
       const requestResponse = await axios.post(`${API_URL}/api/requests/create`, {
         ...formData,
+        tier: selectedTier,
         hasEmailAccess: formData.hasEmailAccess === 'yes',
       });
 
