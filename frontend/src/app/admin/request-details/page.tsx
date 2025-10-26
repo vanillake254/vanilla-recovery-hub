@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import axios from 'axios';
 import toast from 'react-hot-toast';
@@ -24,7 +24,7 @@ interface Request {
   };
 }
 
-export default function RequestDetailsPage() {
+function RequestDetailsContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const requestId = searchParams.get('id');
@@ -354,5 +354,20 @@ export default function RequestDetailsPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function RequestDetailsPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-gray-100 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-primary-600 mx-auto"></div>
+          <p className="mt-4 text-gray-600">Loading...</p>
+        </div>
+      </div>
+    }>
+      <RequestDetailsContent />
+    </Suspense>
   );
 }
