@@ -36,10 +36,8 @@ model Request {
   id            String        @id @default(cuid())
   userId        String
   platform      Platform
-  tier          String        @default("basic") @db.VarChar(50)
   description   String        @db.Text
   hasEmailAccess Boolean?
-  accountInfo   Json?         @default("{}")
   status        RequestStatus @default(NEW)
   txRef         String        @unique @db.VarChar(255)
   paymentStatus PaymentStatus @default(PENDING)
