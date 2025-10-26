@@ -123,3 +123,100 @@ export const getRequest = asyncHandler(async (req: Request, res: Response, next:
     }
   });
 });
+
+/**
+ * Track request by transaction reference
+ */
+export const trackRequest = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+  const { txRef } = req.params;
+
+  const request = await prisma.request.findUnique({
+    where: { txRef },
+    include: {
+      user: {
+        select: {
+          name: true,
+          email: true
+        }
+      },
+      notes: {
+        include: {
+          user: {
+            select: {
+              name: true
+            }
+          }
+        },
+        orderBy: {
+          createdAt: 'desc'
+        }
+      }
+    }
+  });
+
+  if (!request) {
+    throw new AppError('Request not found', 404);
+  }
+
+  res.status(200).json({
+    success: true,
+    data: {
+      request,
+      notes: request.notes
+    }
+  });
+});
+
+/**
+ * Customer adds message to their request
+ */
+export const addCustomerMessage = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
+
+  const { id } = req.params;
+  const { text } = req.body;
+
+  const request = await prisma.request.findUnique({
+    where: { id },
+    include: {
+      user: true
+    }
+  });
+
+  if (!request) {
+    throw new AppError('Request not found', 404);
+  }
+
+  // Create note from customer
+  const note = await prisma.note.create({
+    data: {
+      requestId: id,
+      userId: request.userId,
+      text
+    }
+  });
+
+  // Notify admin via email
+  try {
+    const adminEmail = process.env.ADMIN_EMAIL || 'admin@vanillarecoveryhub.com';
+    await emailService.sendAdminNotification(
+      request.platform.toLowerCase(),
+      request.id,
+      request.user.name,
+      request.user.email,
+      `Customer message: ${text}`
+    );
+    logger.info(`Customer message notification sent for request ${id}`);
+  } catch (error) {
+    logger.error('Failed to send customer message notification:', error);
+  }
+
+  res.status(200).json({
+    success: true,
+    message: 'Message sent successfully',
+    data: note
+  });
+});

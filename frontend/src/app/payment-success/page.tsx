@@ -14,15 +14,30 @@ function PaymentSuccessContent() {
   const searchParams = useSearchParams();
   const tx_ref = searchParams.get('tx_ref');
   const transaction_id = searchParams.get('transaction_id');
+  const urlStatus = searchParams.get('status'); // Get status from URL
   const [verified, setVerified] = useState(false);
   const [loading, setLoading] = useState(true);
   const [retryCount, setRetryCount] = useState(0);
 
   useEffect(() => {
+    // If Flutterwave redirected with successful status, show success immediately
+    if (urlStatus === 'successful') {
+      console.log('Payment successful based on URL status parameter');
+      setVerified(true);
+      setLoading(false);
+      
+      // Save to localStorage
+      if (tx_ref) {
+        localStorage.setItem('paymentVerified', 'true');
+        localStorage.setItem('lastTxRef', tx_ref);
+      }
+      return; // Don't verify with backend if URL says successful
+    }
+    
     if (tx_ref) {
       verifyPayment(tx_ref, transaction_id);
     }
-  }, [tx_ref, transaction_id]);
+  }, [tx_ref, transaction_id, urlStatus]);
 
   const verifyPayment = async (ref: string, transactionId: string | null, isRetry = false) => {
     try {
@@ -201,15 +216,12 @@ function PaymentSuccessContent() {
 
               {/* CTA Buttons */}
               <div className="flex flex-col sm:flex-row gap-4 mt-8">
-                <Link href="/" className="btn btn-primary flex-1 text-center">
+                <Link href={`/track?tx_ref=${tx_ref}`} className="btn btn-primary flex-1 text-center">
+                  Track Your Request
+                </Link>
+                <Link href="/" className="btn btn-secondary flex-1 text-center">
                   Return to Home
                 </Link>
-                <button
-                  onClick={() => window.open(`mailto:support@vanillarecoveryhub.com?subject=Recovery%20Support%20-%20${tx_ref}`)}
-                  className="btn btn-secondary flex-1"
-                >
-                  Email Support
-                </button>
               </div>
             </div>
           ) : (
@@ -267,15 +279,12 @@ function PaymentSuccessContent() {
 
               {/* CTA Buttons */}
               <div className="flex flex-col sm:flex-row gap-4">
-                <Link href="/" className="btn btn-primary flex-1 text-center">
+                <Link href={`/track?tx_ref=${tx_ref}`} className="btn btn-primary flex-1 text-center">
+                  Track Your Request
+                </Link>
+                <Link href="/" className="btn btn-secondary flex-1 text-center">
                   Return to Home
                 </Link>
-                <button
-                  onClick={() => window.open(`mailto:support@vanillarecoveryhub.com?subject=Payment%20Verification%20-%20${tx_ref}&body=Hi,%0D%0A%0D%0AMy payment needs verification.%0D%0ATransaction Reference: ${tx_ref}%0D%0A%0D%0APlease confirm my payment status.`)}
-                  className="btn btn-secondary flex-1"
-                >
-                  Contact Support
-                </button>
               </div>
 
               <p className="text-center text-sm text-gray-500 mt-6">

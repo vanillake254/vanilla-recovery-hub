@@ -93,9 +93,11 @@ function RequestDetailsContent() {
     setUpdating(true);
     try {
       const token = localStorage.getItem('adminToken');
+      // Convert to lowercase to match backend validation
+      const statusToSend = newStatus.toLowerCase();
       await axios.put(
         `${API_URL}/api/admin/requests/${requestId}/status`,
-        { status: newStatus },
+        { status: statusToSend },
         { headers: { Authorization: `Bearer ${token}` } }
       );
       toast.success('Status updated successfully!');

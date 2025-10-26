@@ -33,4 +33,24 @@ router.post(
  */
 router.get('/:id', requestController.getRequest);
 
+/**
+ * @route   GET /api/requests/track/:txRef
+ * @desc    Track request by transaction reference
+ * @access  Public
+ */
+router.get('/track/:txRef', requestController.trackRequest);
+
+/**
+ * @route   POST /api/requests/:id/message
+ * @desc    Customer sends message about their request
+ * @access  Public
+ */
+router.post(
+  '/:id/message',
+  [
+    body('text').trim().notEmpty().withMessage('Message text is required')
+  ],
+  requestController.addCustomerMessage
+);
+
 export default router;

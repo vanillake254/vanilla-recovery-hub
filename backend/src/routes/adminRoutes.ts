@@ -57,7 +57,10 @@ router.post(
 router.put(
   '/requests/:id/status',
   [
-    body('status').isIn(['new', 'in_progress', 'resolved', 'failed']).withMessage('Invalid status')
+    body('status')
+      .customSanitizer((value) => value?.toLowerCase()) // Normalize to lowercase
+      .isIn(['new', 'in_progress', 'resolved', 'failed'])
+      .withMessage('Invalid status')
   ],
   adminController.updateStatus
 );
