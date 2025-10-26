@@ -219,7 +219,7 @@ function RecoverPageContent() {
                       <p className="text-sm text-gray-600">Email guidance + Chat support</p>
                     </div>
                     <div className="text-right">
-                      <div className="text-3xl font-bold text-primary-600">KES 1,500</div>
+                      <div className="text-3xl font-bold text-primary-600">KES 2,000</div>
                     </div>
                   </div>
                   <ul className="space-y-2">

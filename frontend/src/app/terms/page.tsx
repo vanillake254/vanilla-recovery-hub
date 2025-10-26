@@ -25,7 +25,7 @@ export default function TermsOfService() {
             <h2>1. Service Description</h2>
             <p>
               Vanilla Recovery Hub provides account recovery guidance and support for social media and email platforms. 
-              We offer two service tiers: Basic (KES 1,500) and Premium (KES 3,000).
+              We offer two service tiers: Basic (KES 2,000) and Premium (KES 3,000).
             </p>
 
             <h2>2. What We Provide</h2>

@@ -185,7 +185,7 @@
     {
       "name": "why_not_free",
       "patterns": ["why not free", "why do i have to pay", "free recovery", "can you do it for free"],
-      "responses": ["I understand the question! Here's why we charge:\n\n💼 **What You're Paying For:**\n- Expert human support (not just AI)\n- Hours of research on your case\n- Direct platform support contact\n- Follow-up until resolved\n- Security guidance\n- 24/7 availability\n\n🆓 **What's FREE:**\n- This AI chatbot (me!)\n- Basic guidance and tips\n- DIY recovery instructions\n- Security education\n\n💡 **Think of it like:**\n- You CAN fix your car yourself (free)\n- OR hire a mechanic (paid, faster, expert)\n\n🎯 **Our Prices:**\n- Basic: KES 1,500 (email support)\n- Premium: KES 3,000 (done-for-you)\n\nWe're affordable compared to losing your account forever! Worth it?"],
+      "responses": ["I understand the question! Here's why we charge:\n\n💼 **What You're Paying For:**\n- Expert human support (not just AI)\n- Hours of research on your case\n- Direct platform support contact\n- Follow-up until resolved\n- Security guidance\n- 24/7 availability\n\n🆓 **What's FREE:**\n- This AI chatbot (me!)\n- Basic guidance and tips\n- DIY recovery instructions\n- Security education\n\n💡 **Think of it like:**\n- You CAN fix your car yourself (free)\n- OR hire a mechanic (paid, faster, expert)\n\n🎯 **Our Prices:**\n- Basic: KES 2,000 (email support)\n- Premium: KES 3,000 (done-for-you)\n\nWe're affordable compared to losing your account forever! Worth it?"],
       "tags": ["payment", "value", "justification"]
     }
   ]

@@ -22,7 +22,7 @@ export const metadata: Metadata = {
     locale: 'en_KE',
     url: 'https://vanillarecoveryhub.web.app',
     title: 'Vanilla Recovery Hub - Recover Your Hacked Account',
-    description: 'Professional account recovery for Instagram, Facebook, Gmail & more. 85% success rate. From KES 1,500. Secure payment via Flutterwave.',
+    description: 'Professional account recovery for Instagram, Facebook, Gmail & more. 85% success rate. From KES 2,000. Secure payment via Flutterwave.',
     siteName: 'Vanilla Recovery Hub',
     images: [
       {

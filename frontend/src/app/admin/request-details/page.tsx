@@ -12,8 +12,8 @@ interface Request {
   id: string;
   platform: string;
   status: string;
-  tier: string;
-  accountInfo: any;
+  tier?: string;
+  accountInfo?: any;
   description: string;
   createdAt: string;
   txRef: string;
@@ -230,7 +230,7 @@ function RequestDetailsContent() {
                   </div>
                   <div className="p-3 bg-purple-50 rounded-lg">
                     <p className="text-xs text-gray-600 mb-1">Service Tier</p>
-                    <p className="font-semibold text-primary-600 capitalize">{request.tier}</p>
+                    <p className="font-semibold text-primary-600 capitalize">{request.tier || 'Basic'}</p>
                   </div>
                   <div className="p-3 bg-green-50 rounded-lg">
                     <p className="text-xs text-gray-600 mb-1">Request Date</p>

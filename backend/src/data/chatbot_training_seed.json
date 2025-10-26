@@ -71,7 +71,7 @@
     {
       "name": "pricing",
       "patterns": ["how much", "what's the price", "cost", "pricing", "how much does it cost", "what do you charge", "fees", "price list", "packages", "plans", "rates"],
-      "responses": ["Our pricing is transparent:\n\n💼 **Basic Recovery**: KES 1,500\n- Email guidance & step-by-step instructions\n- Chat support for questions\n- Security checklist\n\n🔥 **Premium Recovery**: KES 3,000\n- Everything in Basic, PLUS:\n- Priority 12-hour response\n- Done-for-you assistance (with consent)\n- 2FA setup help\n- 7-day follow-up support\n\nWe accept M-Pesa, Visa, and Mastercard via Flutterwave. Ready to start?"],
+      "responses": ["Our pricing is transparent:\n\n💼 **Basic Recovery**: KES 2,000\n- Email guidance & step-by-step instructions\n- Chat support for questions\n- Security checklist\n\n🔥 **Premium Recovery**: KES 3,000\n- Everything in Basic, PLUS:\n- Priority 12-hour response\n- Done-for-you assistance (with consent)\n- 2FA setup help\n- 7-day follow-up support\n\nWe accept M-Pesa, Visa, and Mastercard via Flutterwave. Ready to start?"],
       "tags": ["payment", "pricing", "pre_payment"]
     },
     {
