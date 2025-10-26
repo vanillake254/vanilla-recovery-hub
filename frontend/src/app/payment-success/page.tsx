@@ -13,19 +13,27 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL;
 function PaymentSuccessContent() {
   const searchParams = useSearchParams();
   const tx_ref = searchParams.get('tx_ref');
+  const transaction_id = searchParams.get('transaction_id');
   const [verified, setVerified] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [retryCount, setRetryCount] = useState(0);
 
   useEffect(() => {
     if (tx_ref) {
-      verifyPayment(tx_ref);
+      verifyPayment(tx_ref, transaction_id);
     }
-  }, [tx_ref]);
+  }, [tx_ref, transaction_id]);
 
-  const verifyPayment = async (ref: string) => {
+  const verifyPayment = async (ref: string, transactionId: string | null, isRetry = false) => {
     try {
-      console.log('Verifying payment with ref:', ref);
-      const response = await axios.get(`${API_URL}/api/payments/verify/${ref}`);
+      console.log('Verifying payment with ref:', ref, 'transaction_id:', transactionId);
+      
+      // Build URL with transaction_id if available
+      const verifyUrl = transactionId 
+        ? `${API_URL}/api/payments/verify/${ref}?transaction_id=${transactionId}`
+        : `${API_URL}/api/payments/verify/${ref}`;
+      
+      const response = await axios.get(verifyUrl);
       console.log('Payment verification response:', response.data);
       const data = response.data.data;
       
@@ -48,12 +56,35 @@ function PaymentSuccessContent() {
         }
       } else {
         console.log('Payment status not successful:', data.paymentStatus);
+        
+        // Retry up to 3 times with delays (webhooks might be slow)
+        if (!isRetry && retryCount < 3) {
+          console.log(`Retrying verification in 3 seconds... (Attempt ${retryCount + 1}/3)`);
+          setTimeout(() => {
+            setRetryCount(retryCount + 1);
+            verifyPayment(ref, transactionId, true);
+          }, 3000);
+          return; // Don't set loading to false yet
+        }
       }
     } catch (error: any) {
       console.error('Payment verification failed:', error);
       console.error('Error details:', error.response?.data || error.message);
+      
+      // Retry on network errors
+      if (!isRetry && retryCount < 3 && (error.code === 'ERR_NETWORK' || error.response?.status >= 500)) {
+        console.log(`Retrying verification in 3 seconds... (Attempt ${retryCount + 1}/3)`);
+        setTimeout(() => {
+          setRetryCount(retryCount + 1);
+          verifyPayment(ref, transactionId, true);
+        }, 3000);
+        return; // Don't set loading to false yet
+      }
     } finally {
-      setLoading(false);
+      // Only set loading to false if we're not going to retry
+      if (isRetry || retryCount >= 3) {
+        setLoading(false);
+      }
     }
   };
 
@@ -66,7 +97,13 @@ function PaymentSuccessContent() {
           {loading ? (
             <div className="text-center py-20">
               <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-primary-600 mx-auto"></div>
-              <p className="mt-4 text-gray-600">Verifying your payment...</p>
+              <p className="mt-4 text-gray-600">
+                Verifying your payment...
+                {retryCount > 0 && ` (Attempt ${retryCount + 1}/4)`}
+              </p>
+              <p className="mt-2 text-sm text-gray-500">
+                This may take a few moments as we confirm with the payment gateway
+              </p>
             </div>
           ) : verified ? (
             <div className="animate-fade-in">

@@ -197,6 +197,7 @@ export const handleWebhook = asyncHandler(async (req: Request, res: Response, ne
  */
 export const verifyPayment = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
   const { tx_ref } = req.params;
+  const { transaction_id } = req.query; // Get transaction ID from query params
 
   const payment = await prisma.payment.findUnique({
     where: { txRef: tx_ref },
@@ -214,30 +215,54 @@ export const verifyPayment = asyncHandler(async (req: Request, res: Response, ne
   }
 
   // If payment is still pending, verify with Flutterwave directly
-  if (payment.status === 'PENDING' && payment.transactionId) {
+  if (payment.status === 'PENDING') {
     try {
-      const verification = await paymentService.verifyPayment(payment.transactionId);
+      // Use transaction_id from query params or the stored one
+      const transactionIdToVerify = (transaction_id as string) || payment.transactionId;
       
-      if (verification.data.status === 'successful') {
-        // Update payment to successful
-        await prisma.payment.update({
-          where: { txRef: tx_ref },
-          data: {
-            status: 'SUCCESSFUL',
-            gatewayResponse: verification.data
-          }
-        });
+      if (transactionIdToVerify) {
+        logger.info(`Verifying payment with Flutterwave. TX Ref: ${tx_ref}, Transaction ID: ${transactionIdToVerify}`);
+        const verification = await paymentService.verifyPayment(transactionIdToVerify);
         
-        // Update request payment status
-        if (payment.request) {
-          await prisma.request.update({
-            where: { id: payment.request.id },
-            data: { paymentStatus: 'PAID' }
+        logger.info(`Flutterwave verification response:`, verification.data);
+        
+        if (verification.data.status === 'successful') {
+          // Update payment to successful
+          await prisma.payment.update({
+            where: { txRef: tx_ref },
+            data: {
+              status: 'SUCCESSFUL',
+              transactionId: transactionIdToVerify,
+              flwRef: verification.data.flw_ref,
+              gatewayResponse: verification.data
+            }
           });
+          
+          // Update request payment status
+          if (payment.request) {
+            await prisma.request.update({
+              where: { id: payment.request.id },
+              data: { paymentStatus: 'PAID' }
+            });
+            
+            // Send confirmation email
+            emailService.sendPaymentConfirmation(
+              payment.request.user.email,
+              payment.request.user.name,
+              payment.request.platform.toLowerCase(),
+              payment.amount,
+              tx_ref,
+              payment.request.id
+            ).catch(err => logger.error('Email sending failed:', err));
+          }
+          
+          payment.status = 'SUCCESSFUL';
+          logger.info(`Payment verified and updated: ${tx_ref}`);
+        } else {
+          logger.warn(`Payment verification returned status: ${verification.data.status} for ${tx_ref}`);
         }
-        
-        payment.status = 'SUCCESSFUL';
-        logger.info(`Payment verified and updated: ${tx_ref}`);
+      } else {
+        logger.warn(`No transaction ID available for verification: ${tx_ref}`);
       }
     } catch (error) {
       logger.error('Flutterwave verification failed:', error);
