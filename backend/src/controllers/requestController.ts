@@ -16,7 +16,7 @@ export const createRequest = asyncHandler(async (req: Request, res: Response, ne
     return res.status(400).json({ errors: errors.array() });
   }
 
-  const { name, email, phone, platform, description, hasEmailAccess } = req.body;
+  const { name, email, phone, platform, description, hasEmailAccess, tier } = req.body;
 
   // Check if user exists, otherwise create
   let user = await prisma.user.findUnique({ where: { email } });
@@ -43,6 +43,7 @@ export const createRequest = asyncHandler(async (req: Request, res: Response, ne
       platform: platform.toUpperCase(),
       description: description || '',
       hasEmailAccess: hasEmailAccess !== undefined ? hasEmailAccess : null,
+      tier: tier || 'basic',
       status: 'NEW',
       txRef: tx_ref,
       paymentStatus: 'PENDING'
@@ -67,6 +68,7 @@ export const createRequest = asyncHandler(async (req: Request, res: Response, ne
       requestId: request.id,
       tx_ref: request.txRef,
       platform: request.platform.toLowerCase(),
+      tier: request.tier || 'basic',
       status: request.status.toLowerCase(),
       paymentStatus: request.paymentStatus.toLowerCase(),
       user: {
