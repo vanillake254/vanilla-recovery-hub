@@ -53,10 +53,11 @@ function RequestDetailsContent() {
       const response = await axios.get(`${API_URL}/api/admin/requests/${requestId}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
-      setRequest(response.data.data);
+      // Backend returns { request, payment, chatLogs } inside data
+      setRequest(response.data.data.request);
     } catch (error) {
       toast.error('Failed to load request details');
-      console.error(error);
+      console.error('Request details error:', error);
       router.push('/admin/requests');
     } finally {
       setLoading(false);

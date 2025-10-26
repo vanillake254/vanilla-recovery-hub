@@ -6,7 +6,7 @@ import { FiCheck, FiStar } from 'react-icons/fi';
 const tiers = [
   {
     name: 'Basic Recovery',
-    price: '1,500',
+    price: '2,000',
     popular: false,
     features: [
       'Platform-specific recovery guide',

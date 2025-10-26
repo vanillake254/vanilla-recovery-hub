@@ -265,7 +265,7 @@ export default function ChatWidget() {
                 onClick={() => {
                   const paymentPrompt: Message = {
                     from: 'bot',
-                    text: '💬 **Premium Chat Support**\n\nTo chat with our human support team, please complete payment first.\n\n✅ What you get:\n- Direct chat with recovery experts\n- Platform-specific recovery guides\n- Step-by-step instructions via email\n- Priority support\n\n**Price:** KES 1,500 (Basic) or KES 3,000 (Premium)\n\nClick below to start your recovery process!',
+                    text: '💬 **Premium Chat Support**\n\nTo chat with our human support team, please complete payment first.\n\n✅ What you get:\n- Direct chat with recovery experts\n- Platform-specific recovery guides\n- Step-by-step instructions via email\n- Priority support\n\n**Price:** KES 2,000 (Basic) or KES 3,000 (Premium)\n\nClick below to start your recovery process!',
                     ts: new Date(),
                     suggestions: ['Start Recovery Process']
                   };

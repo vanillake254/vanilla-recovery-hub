@@ -24,10 +24,12 @@ function PaymentSuccessContent() {
 
   const verifyPayment = async (ref: string) => {
     try {
+      console.log('Verifying payment with ref:', ref);
       const response = await axios.get(`${API_URL}/api/payments/verify/${ref}`);
+      console.log('Payment verification response:', response.data);
       const data = response.data.data;
       
-      if (data.paymentStatus === 'successful') {
+      if (data.paymentStatus === 'successful' || data.paymentStatus === 'SUCCESSFUL') {
         setVerified(true);
         
         // Save user info from payment data
@@ -44,9 +46,12 @@ function PaymentSuccessContent() {
             localStorage.setItem('userPlatform', platform);
           }
         }
+      } else {
+        console.log('Payment status not successful:', data.paymentStatus);
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error('Payment verification failed:', error);
+      console.error('Error details:', error.response?.data || error.message);
     } finally {
       setLoading(false);
     }
