@@ -3,7 +3,7 @@ import { validationResult } from 'express-validator';
 import prisma from '../lib/prisma';
 import { AppError, asyncHandler } from '../middleware/errorHandler';
 import { logger } from '../utils/logger';
-import paymentService from '../services/paymentService';
+// import paymentService from '../services/paymentService'; // REMOVED - Using IntaSend now
 import intasendService from '../services/intasendService';
 import emailService from '../services/emailService';
 
@@ -211,27 +211,27 @@ export const verifyPayment = asyncHandler(async (req: Request, res: Response, ne
     throw new AppError('Payment not found', 404);
   }
 
-  // If payment is still pending, verify with Flutterwave directly
+  // If payment is still pending, verify with IntaSend directly
   if (payment.status === 'PENDING') {
     try {
-      // Use transaction_id from query params or the stored one
-      const transactionIdToVerify = (transaction_id as string) || payment.transactionId;
+      // Use checkout ID (stored in flwRef for compatibility)
+      const checkoutIdToVerify = payment.flwRef || payment.transactionId;
       
-      if (transactionIdToVerify) {
-        logger.info(`Verifying payment with Flutterwave. TX Ref: ${tx_ref}, Transaction ID: ${transactionIdToVerify}`);
-        const verification = await paymentService.verifyPayment(transactionIdToVerify);
+      if (checkoutIdToVerify) {
+        logger.info(`Verifying payment with IntaSend. TX Ref: ${tx_ref}, Checkout ID: ${checkoutIdToVerify}`);
+        const verification = await intasendService.verifyPayment(checkoutIdToVerify);
         
-        logger.info(`Flutterwave verification response:`, verification.data);
+        logger.info(`IntaSend verification response:`, verification);
         
-        if (verification.data.status === 'successful') {
+        if (verification.success && verification.status === 'COMPLETE') {
           // Update payment to successful
           await prisma.payment.update({
             where: { txRef: tx_ref },
             data: {
               status: 'SUCCESSFUL',
-              transactionId: transactionIdToVerify,
-              flwRef: verification.data.flw_ref,
-              gatewayResponse: verification.data
+              transactionId: checkoutIdToVerify,
+              flwRef: checkoutIdToVerify,
+              gatewayResponse: verification
             }
           });
           
@@ -301,16 +301,17 @@ export const updatePendingPayments = asyncHandler(async (req: Request, res: Resp
 
   for (const payment of pendingPayments) {
     try {
-      if (!payment.transactionId) continue;
+      const checkoutId = payment.flwRef || payment.transactionId;
+      if (!checkoutId) continue;
 
-      const verification = await paymentService.verifyPayment(payment.transactionId);
+      const verification = await intasendService.verifyPayment(checkoutId);
       
-      if (verification.data.status === 'successful') {
+      if (verification.success && verification.status === 'COMPLETE') {
         await prisma.payment.update({
           where: { txRef: payment.txRef },
           data: {
             status: 'SUCCESSFUL',
-            flwRef: verification.data.flw_ref
+            flwRef: checkoutId
           }
         });
 
