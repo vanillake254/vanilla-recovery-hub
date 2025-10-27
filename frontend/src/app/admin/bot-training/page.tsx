@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import axios from 'axios';
 import toast from 'react-hot-toast';
-import { FiPlus, FiTrash2, FiMessageSquare, FiSave } from 'react-icons/fi';
+import { FiPlus, FiTrash2, FiMessageSquare, FiSave, FiEdit2 } from 'react-icons/fi';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -21,6 +21,7 @@ export default function BotTraining() {
   const [intents, setIntents] = useState<Intent[]>([]);
   const [metrics, setMetrics] = useState<any>(null);
   const [showAddForm, setShowAddForm] = useState(false);
+  const [editingIntent, setEditingIntent] = useState<string | null>(null);
   
   const [newIntent, setNewIntent] = useState({
     patterns: [''],
@@ -134,6 +135,69 @@ export default function BotTraining() {
     }
   };
 
+  const handleEditIntent = (intent: Intent) => {
+    setEditingIntent(intent.name);
+    setNewIntent({
+      patterns: [...intent.patterns],
+      responses: [...intent.responses],
+      name: intent.name,
+      tags: intent.tags || ['custom']
+    });
+    setShowAddForm(false);
+    // Scroll to the form
+    setTimeout(() => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }, 100);
+  };
+
+  const handleUpdateIntent = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    const patterns = newIntent.patterns.filter(p => p.trim());
+    const responses = newIntent.responses.filter(r => r.trim());
+
+    if (patterns.length === 0 || responses.length === 0) {
+      toast.error('Please add at least one pattern and one response');
+      return;
+    }
+
+    try {
+      const token = localStorage.getItem('adminToken');
+      
+      // Delete old intent
+      await axios.delete(`${API_URL}/api/admin/bot/training/${editingIntent}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      
+      // Add updated intent
+      await axios.post(
+        `${API_URL}/api/admin/bot/training`,
+        {
+          patterns,
+          responses,
+          name: newIntent.name,
+          tags: newIntent.tags
+        },
+        {
+          headers: { Authorization: `Bearer ${token}` }
+        }
+      );
+
+      toast.success('Training updated successfully!');
+      setEditingIntent(null);
+      setNewIntent({
+        patterns: [''],
+        responses: [''],
+        name: '',
+        tags: ['custom']
+      });
+      fetchTrainingData(token!);
+    } catch (error) {
+      toast.error('Failed to update training');
+      console.error(error);
+    }
+  };
+
   const handleDeleteIntent = async (intentName: string) => {
     if (!confirm(`Delete training intent "${intentName}"? This action cannot be undone.`)) {
       return;
@@ -217,10 +281,12 @@ export default function BotTraining() {
         </button>
       </div>
 
-      {showAddForm && (
+      {(showAddForm || editingIntent) && (
         <div className="card mb-8 border-2 border-primary-200">
-          <h3 className="text-xl font-bold text-gray-900 mb-4">Add New Training</h3>
-          <form onSubmit={handleSubmit} className="space-y-6">
+          <h3 className="text-xl font-bold text-gray-900 mb-4">
+            {editingIntent ? `Edit Training: ${editingIntent}` : 'Add New Training'}
+          </h3>
+          <form onSubmit={editingIntent ? handleUpdateIntent : handleSubmit} className="space-y-6">
             
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -321,11 +387,20 @@ export default function BotTraining() {
             <div className="flex space-x-4">
               <button type="submit" className="btn btn-primary">
                 <FiSave className="w-5 h-5 mr-2" />
-                Save Training
+                {editingIntent ? 'Update Training' : 'Save Training'}
               </button>
               <button
                 type="button"
-                onClick={() => setShowAddForm(false)}
+                onClick={() => {
+                  setShowAddForm(false);
+                  setEditingIntent(null);
+                  setNewIntent({
+                    patterns: [''],
+                    responses: [''],
+                    name: '',
+                    tags: ['custom']
+                  });
+                }}
                 className="btn btn-secondary"
               >
                 Cancel
@@ -353,13 +428,22 @@ export default function BotTraining() {
                     </div>
                   )}
                   {intent.tags?.includes('custom') && (
-                    <button
-                      onClick={() => handleDeleteIntent(intent.name)}
-                      className="p-1 hover:bg-red-50 rounded text-red-600"
-                      title="Delete intent"
-                    >
-                      <FiTrash2 className="w-4 h-4" />
-                    </button>
+                    <>
+                      <button
+                        onClick={() => handleEditIntent(intent)}
+                        className="p-1 hover:bg-primary-50 rounded text-primary-600"
+                        title="Edit intent"
+                      >
+                        <FiEdit2 className="w-4 h-4" />
+                      </button>
+                      <button
+                        onClick={() => handleDeleteIntent(intent.name)}
+                        className="p-1 hover:bg-red-50 rounded text-red-600"
+                        title="Delete intent"
+                      >
+                        <FiTrash2 className="w-4 h-4" />
+                      </button>
+                    </>
                   )}
                 </div>
               </div>

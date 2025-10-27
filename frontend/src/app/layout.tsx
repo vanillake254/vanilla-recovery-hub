@@ -26,10 +26,10 @@ export const metadata: Metadata = {
     siteName: 'Vanilla Recovery Hub',
     images: [
       {
-        url: 'https://vanillarecoveryhub.web.app/og-image.svg',
+        url: 'https://vanillarecoveryhub.web.app/og-image.svg?v=95',
         width: 1200,
         height: 630,
-        alt: 'Vanilla Recovery Hub - Professional Account Recovery Services',
+        alt: 'Vanilla Recovery Hub - 95% Success Rate - Professional Account Recovery',
       },
     ],
   },
@@ -37,7 +37,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Vanilla Recovery Hub - Recover Your Hacked Account',
     description: 'Professional account recovery services. 95% success rate. Instagram, Facebook, Gmail, TikTok & more.',
-    images: ['https://vanillarecoveryhub.web.app/og-image.svg'],
+    images: ['https://vanillarecoveryhub.web.app/og-image.svg?v=95'],
   },
   appleWebApp: {
     capable: true,
