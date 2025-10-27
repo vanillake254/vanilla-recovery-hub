@@ -8,6 +8,9 @@ const intasend = new IntaSend(
   true // true = production/live mode, false = test mode
 );
 
+// Get checkout links API
+const checkoutLinks = intasend.checkoutLinks();
+
 interface PaymentPayload {
   amount: number;
   currency: string;
@@ -48,10 +51,8 @@ class IntaSendService {
         reference: payload.api_ref
       });
 
-      const collection = intasend.collection();
-
-      // Create checkout session
-      const response = await collection.checkout({
+      // Create checkout link using IntaSend API
+      const response = await checkoutLinks.create({
         amount: payload.amount,
         currency: payload.currency || 'KES',
         email: payload.email,
@@ -87,8 +88,8 @@ class IntaSendService {
     try {
       logger.info('Verifying IntaSend payment:', checkoutId);
 
-      const collection = intasend.collection();
-      const status = await collection.status(checkoutId);
+      // Get status using checkout links API
+      const status = await checkoutLinks.retrieve(checkoutId);
 
       logger.info('IntaSend payment status:', status);
 
