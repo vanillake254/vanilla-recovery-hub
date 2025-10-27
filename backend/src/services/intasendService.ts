@@ -1,29 +1,21 @@
-import IntaSend from 'intasend-node';
+import axios from 'axios';
 import { logger } from '../utils/logger';
 
-// Lazy initialization - only create IntaSend when needed
-let intasendInstance: any = null;
-let collectionInstance: any = null;
+// IntaSend API Configuration
+const INTASEND_BASE_URL = 'https://payment.intasend.com/api/v1';
 
-function getIntaSend() {
-  if (!intasendInstance) {
-    const INTASEND_PUBLISHABLE_KEY = process.env.INTASEND_PUBLISHABLE_KEY || '';
-    const INTASEND_SECRET_KEY = process.env.INTASEND_SECRET_KEY || '';
+function getIntaSendHeaders() {
+  const INTASEND_SECRET_KEY = process.env.INTASEND_SECRET_KEY || '';
+  const INTASEND_PUBLISHABLE_KEY = process.env.INTASEND_PUBLISHABLE_KEY || '';
 
-    if (!INTASEND_PUBLISHABLE_KEY || !INTASEND_SECRET_KEY) {
-      throw new Error('IntaSend API keys not configured');
-    }
-
-    intasendInstance = new IntaSend(
-      INTASEND_PUBLISHABLE_KEY,
-      INTASEND_SECRET_KEY,
-      true // production mode
-    );
-    collectionInstance = intasendInstance.collection(); // Use collection() not checkoutLinks()
-    
-    logger.info('IntaSend initialized successfully');
+  if (!INTASEND_SECRET_KEY || !INTASEND_PUBLISHABLE_KEY) {
+    throw new Error('IntaSend API keys not configured');
   }
-  return { intasend: intasendInstance, collection: collectionInstance };
+
+  return {
+    'Authorization': `Bearer ${INTASEND_SECRET_KEY}`,
+    'Content-Type': 'application/json'
+  };
 }
 
 interface PaymentPayload {
@@ -66,32 +58,35 @@ class IntaSendService {
         reference: payload.api_ref
       });
 
-      // Create payment collection using IntaSend API
-      const { collection } = getIntaSend();
-      const response = await collection.create({
-        amount: payload.amount,
-        currency: payload.currency || 'KES',
-        email: payload.email,
-        phone_number: payload.phone_number,
-        first_name: payload.name.split(' ')[0] || payload.name,
-        last_name: payload.name.split(' ')[1] || '',
-        api_ref: payload.api_ref,
-        redirect_url: payload.redirect_url || process.env.SUCCESS_URL,
-      });
+      // Create payment collection using IntaSend REST API
+      const response = await axios.post(
+        `${INTASEND_BASE_URL}/payment/collection/`,
+        {
+          amount: payload.amount,
+          currency: payload.currency || 'KES',
+          email: payload.email,
+          phone_number: payload.phone_number,
+          first_name: payload.name.split(' ')[0] || payload.name,
+          last_name: payload.name.split(' ')[1] || '',
+          api_ref: payload.api_ref,
+          redirect_url: payload.redirect_url || process.env.SUCCESS_URL,
+        },
+        { headers: getIntaSendHeaders() }
+      );
 
-      logger.info('IntaSend checkout created:', response);
+      logger.info('IntaSend checkout created:', response.data);
 
       return {
         success: true,
-        paymentUrl: response.url,
-        checkoutId: response.id,
+        paymentUrl: response.data.url,
+        checkoutId: response.data.id,
         message: 'Payment checkout created successfully'
       };
     } catch (error: any) {
-      logger.error('IntaSend payment initiation failed:', error);
+      logger.error('IntaSend payment initiation failed:', error.response?.data || error.message);
       return {
         success: false,
-        error: error.message || 'Failed to initiate payment',
+        error: error.response?.data?.message || error.message || 'Failed to initiate payment',
         message: 'Payment initiation failed'
       };
     }
@@ -104,10 +99,13 @@ class IntaSendService {
     try {
       logger.info('Verifying IntaSend payment:', checkoutId);
 
-      // Get status using collection API
-      const { collection } = getIntaSend();
-      const status = await collection.status(checkoutId);
+      // Get status using IntaSend REST API
+      const response = await axios.get(
+        `${INTASEND_BASE_URL}/payment/collection/${checkoutId}/`,
+        { headers: getIntaSendHeaders() }
+      );
 
+      const status = response.data;
       logger.info('IntaSend payment status:', status);
 
       // IntaSend statuses: PENDING, PROCESSING, COMPLETE, FAILED
@@ -122,10 +120,10 @@ class IntaSendService {
         message: isSuccessful ? 'Payment verified successfully' : `Payment status: ${status.state}`
       };
     } catch (error: any) {
-      logger.error('IntaSend payment verification failed:', error);
+      logger.error('IntaSend payment verification failed:', error.response?.data || error.message);
       return {
         success: false,
-        error: error.message || 'Failed to verify payment',
+        error: error.response?.data?.message || error.message || 'Failed to verify payment',
         message: 'Payment verification failed'
       };
     }
