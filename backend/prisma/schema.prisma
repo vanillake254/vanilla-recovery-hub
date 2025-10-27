@@ -38,6 +38,7 @@ model Request {
   platform      Platform
   description   String        @db.Text
   hasEmailAccess Boolean?
+  tier          String        @default("basic") @db.VarChar(20)
   status        RequestStatus @default(NEW)
   txRef         String        @unique @db.VarChar(255)
   paymentStatus PaymentStatus @default(PENDING)
