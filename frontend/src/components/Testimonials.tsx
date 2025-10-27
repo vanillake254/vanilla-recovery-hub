@@ -73,7 +73,7 @@ export default function Testimonials() {
             <div className="text-gray-600">Accounts Recovered</div>
           </div>
           <div className="text-center">
-            <div className="text-4xl font-bold text-primary-600 mb-2">85%</div>
+            <div className="text-4xl font-bold text-primary-600 mb-2">95%</div>
             <div className="text-gray-600">Success Rate</div>
           </div>
           <div className="text-center">

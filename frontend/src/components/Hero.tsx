@@ -12,7 +12,7 @@ export default function Hero() {
           {/* Badge */}
           <div className="inline-flex items-center px-4 py-2 bg-primary-100 rounded-full mb-6 animate-slide-up">
             <span className="text-primary-700 font-semibold text-sm">
-              ✨ 500+ Accounts Recovered | 85% Success Rate
+              ✨ 500+ Accounts Recovered | 95% Success Rate
             </span>
           </div>
 

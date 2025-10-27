@@ -185,7 +185,7 @@ function RecoverPageContent() {
               </span>
               <span className="flex items-center">
                 <FiCheck className="w-4 h-4 mr-2 text-green-600" />
-                85% Success Rate
+                95% Success Rate
               </span>
             </div>
           </div>

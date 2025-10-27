@@ -8,7 +8,7 @@ const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
   title: 'Vanilla Recovery Hub - Professional Account Recovery Services',
-  description: 'Recover your hacked or locked social media and email accounts. Expert guidance for Facebook, Instagram, Gmail, TikTok, and more. 85% success rate. Secure payment via Flutterwave.',
+  description: 'Recover your hacked or locked social media and email accounts. Expert guidance for Facebook, Instagram, Gmail, TikTok, and more. 95% success rate. Secure payment via Flutterwave.',
   keywords: 'account recovery, hacked account, social media recovery, Instagram recovery, Facebook recovery, Gmail recovery, TikTok recovery, Kenya account recovery',
   manifest: '/manifest.json',
   themeColor: '#7C3AED',
@@ -22,22 +22,22 @@ export const metadata: Metadata = {
     locale: 'en_KE',
     url: 'https://vanillarecoveryhub.web.app',
     title: 'Vanilla Recovery Hub - Recover Your Hacked Account',
-    description: 'Professional account recovery for Instagram, Facebook, Gmail & more. 85% success rate. From KES 2,000. Secure payment via Flutterwave.',
+    description: 'Professional account recovery for Instagram, Facebook, Gmail & more. 95% success rate. From KES 2,000. Secure payment via Flutterwave.',
     siteName: 'Vanilla Recovery Hub',
     images: [
       {
-        url: 'https://vanillarecoveryhub.web.app/logo.svg',
-        width: 512,
-        height: 512,
-        alt: 'Vanilla Recovery Hub Logo',
+        url: 'https://vanillarecoveryhub.web.app/og-image.svg',
+        width: 1200,
+        height: 630,
+        alt: 'Vanilla Recovery Hub - Professional Account Recovery Services',
       },
     ],
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Vanilla Recovery Hub - Recover Your Hacked Account',
-    description: 'Professional account recovery services. 85% success rate. Instagram, Facebook, Gmail, TikTok & more.',
-    images: ['https://vanillarecoveryhub.web.app/logo.svg'],
+    description: 'Professional account recovery services. 95% success rate. Instagram, Facebook, Gmail, TikTok & more.',
+    images: ['https://vanillarecoveryhub.web.app/og-image.svg'],
   },
   appleWebApp: {
     capable: true,

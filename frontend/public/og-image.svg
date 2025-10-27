@@ -1,0 +1,47 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background Gradient -->
+  <defs>
+    <linearGradient id="bgGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#7C3AED;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#9333EA;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="1200" height="630" fill="url(#bgGradient)"/>
+  
+  <!-- Shield Logo -->
+  <g transform="translate(500, 100)">
+    <path d="M100 20 L200 60 L200 180 Q200 240, 100 300 Q0 240, 0 180 L0 60 Z" 
+          fill="#FFFFFF" 
+          opacity="0.95"/>
+    <path d="M50 160 L90 200 L170 90" 
+          fill="none" 
+          stroke="#7C3AED" 
+          stroke-width="18" 
+          stroke-linecap="round" 
+          stroke-linejoin="round"/>
+    <circle cx="90" cy="200" r="10" fill="#7C3AED"/>
+  </g>
+  
+  <!-- Title -->
+  <text x="600" y="400" font-family="Arial, sans-serif" font-size="64" font-weight="bold" fill="white" text-anchor="middle">
+    Vanilla Recovery Hub
+  </text>
+  
+  <!-- Subtitle -->
+  <text x="600" y="460" font-family="Arial, sans-serif" font-size="32" fill="white" opacity="0.9" text-anchor="middle">
+    Professional Account Recovery Services
+  </text>
+  
+  <!-- Stats -->
+  <text x="400" y="540" font-family="Arial, sans-serif" font-size="28" fill="white" opacity="0.95" text-anchor="middle">
+    ✓ 500+ Recovered
+  </text>
+  <text x="600" y="540" font-family="Arial, sans-serif" font-size="28" fill="white" opacity="0.95" text-anchor="middle">
+    ✓ 95% Success
+  </text>
+  <text x="800" y="540" font-family="Arial, sans-serif" font-size="28" fill="white" opacity="0.95" text-anchor="middle">
+    ✓ Secure Payment
+  </text>
+</svg>
