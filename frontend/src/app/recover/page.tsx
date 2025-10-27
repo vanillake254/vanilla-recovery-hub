@@ -14,7 +14,7 @@ function RecoverPageContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const tierFromUrl = searchParams.get('tier');
-  const [selectedTier, setSelectedTier] = useState<'basic' | 'premium'>('basic');
+  const [selectedTier, setSelectedTier] = useState<'basic' | 'premium'>('premium'); // Default to premium
   const [activeTab, setActiveTab] = useState<'new' | 'existing'>('new');
   
   // Set tier from URL parameter
@@ -23,6 +23,9 @@ function RecoverPageContent() {
       setSelectedTier('premium');
     } else if (tierFromUrl === 'basic') {
       setSelectedTier('basic');
+    } else {
+      // No tier in URL, default to premium
+      setSelectedTier('premium');
     }
   }, [tierFromUrl]);
   
@@ -481,7 +484,7 @@ function RecoverPageContent() {
                           value={lookupIdentifier}
                           onChange={(e) => setLookupIdentifier(e.target.value)}
                           className="input flex-1"
-                          placeholder="Enter email or phone number"
+                          placeholder="e.g., your@email.com or +254712345678"
                         />
                         <button
                           onClick={handleLookup}
@@ -492,6 +495,9 @@ function RecoverPageContent() {
                           {lookupLoading ? 'Searching...' : 'Search'}
                         </button>
                       </div>
+                      <p className="text-xs text-blue-600 mt-2">
+                        💡 For phone numbers, use international format starting with + (e.g., +254712345678)
+                      </p>
                     </div>
 
                   </div>
