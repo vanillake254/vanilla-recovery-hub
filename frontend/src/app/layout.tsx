@@ -65,7 +65,7 @@ export const metadata: Metadata = {
     },
   },
   verification: {
-    google: 'your-google-verification-code',
+    google: 'sO1wpsS-zpMVNaubEYA1s7lvGP80svFjfLNBnBny0pY',
     yandex: 'your-yandex-verification-code',
   },
   category: 'Technology',
