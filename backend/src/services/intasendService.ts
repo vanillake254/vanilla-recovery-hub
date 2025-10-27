@@ -58,10 +58,13 @@ class IntaSendService {
         reference: payload.api_ref
       });
 
+      const INTASEND_PUBLISHABLE_KEY = process.env.INTASEND_PUBLISHABLE_KEY || '';
+      
       // Create payment collection using IntaSend REST API
       const response = await axios.post(
         `${INTASEND_BASE_URL}/payment/collection/`,
         {
+          public_key: INTASEND_PUBLISHABLE_KEY, // Required: Public key
           amount: payload.amount,
           currency: payload.currency || 'KES',
           email: payload.email,
