@@ -3,7 +3,7 @@ import { logger } from '../utils/logger';
 
 // Lazy initialization - only create IntaSend when needed
 let intasendInstance: any = null;
-let checkoutLinksInstance: any = null;
+let collectionInstance: any = null;
 
 function getIntaSend() {
   if (!intasendInstance) {
@@ -19,11 +19,11 @@ function getIntaSend() {
       INTASEND_SECRET_KEY,
       true // production mode
     );
-    checkoutLinksInstance = intasendInstance.checkoutLinks();
+    collectionInstance = intasendInstance.collection(); // Use collection() not checkoutLinks()
     
     logger.info('IntaSend initialized successfully');
   }
-  return { intasend: intasendInstance, checkoutLinks: checkoutLinksInstance };
+  return { intasend: intasendInstance, collection: collectionInstance };
 }
 
 interface PaymentPayload {
@@ -66,9 +66,9 @@ class IntaSendService {
         reference: payload.api_ref
       });
 
-      // Create checkout link using IntaSend API
-      const { checkoutLinks } = getIntaSend();
-      const response = await checkoutLinks.create({
+      // Create payment collection using IntaSend API
+      const { collection } = getIntaSend();
+      const response = await collection.create({
         amount: payload.amount,
         currency: payload.currency || 'KES',
         email: payload.email,
@@ -104,9 +104,9 @@ class IntaSendService {
     try {
       logger.info('Verifying IntaSend payment:', checkoutId);
 
-      // Get status using checkout links API
-      const { checkoutLinks } = getIntaSend();
-      const status = await checkoutLinks.retrieve(checkoutId);
+      // Get status using collection API
+      const { collection } = getIntaSend();
+      const status = await collection.status(checkoutId);
 
       logger.info('IntaSend payment status:', status);
 
