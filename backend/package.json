@@ -5,9 +5,10 @@
   "main": "dist/server.js",
   "scripts": {
     "dev": "ts-node-dev --respawn --transpile-only src/server.ts",
-    "build": "prisma generate && tsc --noEmit false || true",
+    "build": "prisma generate && prisma migrate deploy && tsc --noEmit false || true",
     "start": "ts-node --transpile-only src/server.ts",
     "start:prod": "node dist/server.js",
+    "postinstall": "prisma generate",
     "migrate": "prisma migrate deploy",
     "seed": "ts-node src/scripts/seedChatbot.ts",
     "test": "jest --coverage",

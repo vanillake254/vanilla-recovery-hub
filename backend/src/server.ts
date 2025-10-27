@@ -8,6 +8,7 @@ import { logger } from './utils/logger';
 import { errorHandler } from './middleware/errorHandler';
 import { rateLimiter } from './middleware/rateLimiter';
 import chatbotService from './services/chatbotService';
+import ensureTierColumn from './scripts/ensureTierColumn';
 
 // Import routes
 import requestRoutes from './routes/requestRoutes';
@@ -68,6 +69,15 @@ app.use(errorHandler);
 const startServer = async () => {
   try {
     await connectDatabase();
+    
+    // Ensure database schema is up to date
+    logger.info('🔧 Checking database schema...');
+    try {
+      await ensureTierColumn();
+      logger.info('✅ Database schema verified!');
+    } catch (schemaError) {
+      logger.warn('Schema check failed, but continuing:', schemaError);
+    }
     
     // Initialize chatbot
     logger.info('🤖 Initializing Vanilla AI Bot...');
