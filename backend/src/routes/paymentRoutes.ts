@@ -56,4 +56,11 @@ router.post('/update-pending', paymentController.updatePendingPayments);
  */
 router.post('/migrate-tier', paymentController.migrateTierColumn);
 
+/**
+ * @route   POST /api/payments/fix-pending
+ * @desc    Fix all pending payments to PAID status
+ * @access  Admin
+ */
+router.post('/fix-pending', paymentController.fixPendingPayments);
+
 export default router;

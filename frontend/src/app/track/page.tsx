@@ -1,6 +1,6 @@
 'use client';
 
-import { Suspense, useState, useEffect } from 'react';
+import { Suspense, useState, useEffect, useCallback, useRef } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import axios from 'axios';
 import { toast } from 'react-hot-toast';
@@ -43,25 +43,11 @@ function TrackRequestContent() {
   const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState('');
   const [sending, setSending] = useState(false);
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
-  useEffect(() => {
-    if (txRef) {
-      fetchRequestDetails();
-      
-      // Auto-refresh messages every 3 seconds
-      const refreshInterval = setInterval(() => {
-        fetchRequestDetails(true); // Pass true to skip loading state
-      }, 3000);
-      
-      // Cleanup on unmount
-      return () => clearInterval(refreshInterval);
-    } else {
-      toast.error('Transaction reference required');
-      setLoading(false);
-    }
-  }, [txRef]);
-
-  const fetchRequestDetails = async (silent = false) => {
+  const fetchRequestDetails = useCallback(async (silent = false) => {
+    if (!txRef) return;
+    
     try {
       if (!silent) setLoading(true);
       const response = await axios.get(`${API_URL}/api/requests/track/${txRef}`);
@@ -75,7 +61,32 @@ function TrackRequestContent() {
     } finally {
       if (!silent) setLoading(false);
     }
-  };
+  }, [txRef]);
+
+  useEffect(() => {
+    if (!txRef) {
+      toast.error('Transaction reference required');
+      setLoading(false);
+      return;
+    }
+
+    // Initial fetch
+    fetchRequestDetails(false);
+    
+    // Auto-refresh messages every 3 seconds
+    intervalRef.current = setInterval(() => {
+      console.log('Auto-refreshing messages...'); // Debug log
+      fetchRequestDetails(true);
+    }, 3000);
+    
+    // Cleanup on unmount
+    return () => {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+        intervalRef.current = null;
+      }
+    };
+  }, [txRef, fetchRequestDetails]);
 
   const handleSendMessage = async () => {
     if (!message.trim()) {

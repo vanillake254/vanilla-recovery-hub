@@ -339,6 +339,65 @@ export const updatePendingPayments = asyncHandler(async (req: Request, res: Resp
 });
 
 /**
+ * Fix all pending payments - Admin only
+ */
+export const fixPendingPayments = asyncHandler(async (req: Request, res: Response) => {
+  try {
+    logger.info('Finding all requests with PENDING payment status...');
+    
+    const pendingRequests = await prisma.request.findMany({
+      where: {
+        paymentStatus: 'PENDING'
+      },
+      include: {
+        payment: true
+      }
+    });
+
+    logger.info(`Found ${pendingRequests.length} requests with PENDING status`);
+
+    let updatedCount = 0;
+
+    for (const request of pendingRequests) {
+      try {
+        // If there's a payment record, mark as PAID
+        if (request.payment) {
+          await prisma.request.update({
+            where: { id: request.id },
+            data: { paymentStatus: 'PAID' }
+          });
+
+          // Also update payment status if it's PENDING
+          if (request.payment.status === 'PENDING') {
+            await prisma.payment.update({
+              where: { id: request.payment.id },
+              data: { status: 'SUCCESSFUL' }
+            });
+          }
+
+          updatedCount++;
+          logger.info(`Updated request ${request.txRef} to PAID`);
+        }
+      } catch (error) {
+        logger.error(`Failed to update ${request.txRef}:`, error);
+      }
+    }
+
+    res.status(200).json({
+      success: true,
+      message: `Successfully updated ${updatedCount} of ${pendingRequests.length} requests to PAID`
+    });
+  } catch (error: any) {
+    logger.error('Fix pending payments failed:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Failed to fix pending payments',
+      error: error.message
+    });
+  }
+});
+
+/**
  * Migrate tier column - Admin only
  */
 export const migrateTierColumn = asyncHandler(async (req: Request, res: Response) => {
