@@ -6,8 +6,9 @@
   "scripts": {
     "dev": "ts-node-dev --respawn --transpile-only src/server.ts",
     "build": "prisma generate && tsc --noEmit false || true",
-    "start": "prisma migrate deploy && ts-node --transpile-only src/server.ts",
-    "start:prod": "prisma migrate deploy && node dist/server.js",
+    "start": "ts-node --transpile-only src/server.ts",
+    "start:prod": "node dist/server.js",
+    "migrate": "prisma migrate deploy",
     "seed": "ts-node src/scripts/seedChatbot.ts",
     "test": "jest --coverage",
     "lint": "eslint src/**/*.ts",
