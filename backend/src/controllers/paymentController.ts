@@ -4,6 +4,7 @@ import prisma from '../lib/prisma';
 import { AppError, asyncHandler } from '../middleware/errorHandler';
 import { logger } from '../utils/logger';
 import paymentService from '../services/paymentService';
+import intasendService from '../services/intasendService';
 import emailService from '../services/emailService';
 
 /**
@@ -52,39 +53,39 @@ export const initiatePayment = asyncHandler(async (req: Request, res: Response, 
     }
   });
 
-  // Initiate payment with Flutterwave
+  // Initiate payment with IntaSend (M-PESA, Airtel Money, Bank Transfer)
   const paymentPayload = {
-    tx_ref: request.txRef,
     amount,
     currency: 'KES',
-    redirect_url: `${process.env.SUCCESS_URL}?tx_ref=${request.txRef}`,
-    customer: {
-      email: user.email,
-      name: user.name,
-      phonenumber: user.phone
-    },
-    customizations: {
-      title: 'Vanilla Recovery Hub',
-      description: `Account Recovery - ${request.platform.toLowerCase()}`,
-      logo: 'https://your-logo-url.com/logo.png'
-    },
-    payment_options: 'card,mobilemoney,ussd',
-    meta: {
-      requestId: request.id,
-      platform: request.platform.toLowerCase(),
-      tier: tier || 'basic'
-    }
+    email: user.email,
+    phone_number: user.phone,
+    name: user.name,
+    api_ref: request.txRef, // Your unique transaction reference
+    redirect_url: `${process.env.SUCCESS_URL}?tx_ref=${request.txRef}`
   };
 
-  const flutterwaveResponse = await paymentService.initiatePayment(paymentPayload);
+  const intasendResponse = await intasendService.initiatePayment(paymentPayload);
 
-  logger.info(`Payment initiated for request ${requestId}: ${request.tx_ref}`);
+  if (!intasendResponse.success) {
+    throw new AppError(intasendResponse.error || 'Payment initiation failed', 500);
+  }
+
+  // Update payment with checkout ID
+  await prisma.payment.update({
+    where: { id: payment.id },
+    data: { 
+      flwRef: intasendResponse.checkoutId // Store IntaSend checkout ID
+    }
+  });
+
+  logger.info(`IntaSend payment initiated for request ${requestId}: ${request.txRef}`);
 
   res.status(200).json({
     success: true,
     message: 'Payment initiated successfully',
     data: {
-      paymentLink: flutterwaveResponse.data.link,
+      paymentLink: intasendResponse.paymentUrl,
+      checkoutId: intasendResponse.checkoutId,
       tx_ref: request.txRef,
       amount,
       currency: 'KES'
@@ -93,31 +94,26 @@ export const initiatePayment = asyncHandler(async (req: Request, res: Response, 
 });
 
 /**
- * Handle Flutterwave webhook
- * CRITICAL: Always verify webhook signature and transaction
+ * Handle IntaSend webhook
+ * CRITICAL: Always verify webhook and transaction
  */
 export const handleWebhook = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
-  const signature = req.headers['verif-hash'] as string;
-
-  // Verify webhook signature
-  if (!signature || signature !== process.env.FLW_SECRET_KEY) {
-    logger.warn('Invalid webhook signature');
-    return res.status(401).json({ error: 'Invalid signature' });
-  }
-
   const payload = req.body;
-  logger.info('Webhook received:', { event: payload.event, tx_ref: payload.data?.tx_ref });
+  logger.info('IntaSend webhook received:', payload);
 
-  // Only process successful transactions
-  if (payload.event === 'charge.completed' && payload.data.status === 'successful') {
-    const { tx_ref, amount, currency, id: transactionId, flw_ref } = payload.data;
+  // IntaSend webhook payload: { invoice_id, state, value, api_ref, ... }
+  const { state, api_ref, value, invoice_id } = payload;
 
-    // CRITICAL: Verify transaction with Flutterwave API
+  // Only process completed transactions
+  if (state === 'COMPLETE') {
+    const tx_ref = api_ref; // Our transaction reference
+
+    // CRITICAL: Verify transaction with IntaSend API
     try {
-      const verification = await paymentService.verifyPayment(transactionId);
+      const verification = await intasendService.verifyPayment(invoice_id);
 
-      if (verification.data.status !== 'successful') {
-        logger.warn(`Transaction verification failed: ${tx_ref}`);
+      if (!verification.success || verification.status !== 'COMPLETE') {
+        logger.warn(`IntaSend transaction verification failed: ${tx_ref}`);
         return res.status(200).json({ message: 'Transaction not successful' });
       }
 
@@ -137,9 +133,9 @@ export const handleWebhook = asyncHandler(async (req: Request, res: Response, ne
         where: { txRef: tx_ref },
         data: {
           status: 'SUCCESSFUL',
-          flwRef: flw_ref,
-          transactionId: transactionId,
-          gatewayResponse: payload.data
+          flwRef: invoice_id, // IntaSend invoice/checkout ID
+          transactionId: invoice_id,
+          gatewayResponse: payload
         }
       });
 
@@ -157,7 +153,7 @@ export const handleWebhook = asyncHandler(async (req: Request, res: Response, ne
         user.email,
         user.name,
         request.platform.toLowerCase(),
-        amount,
+        value, // Amount from IntaSend
         tx_ref,
         request.id
       ).catch(err => logger.error('Email sending failed:', err));
@@ -167,16 +163,15 @@ export const handleWebhook = asyncHandler(async (req: Request, res: Response, ne
       logger.error('Webhook processing error:', error);
       return res.status(500).json({ error: 'Webhook processing failed' });
     }
-  } else {
-    // Handle failed or other events
-    if (payload.event === 'charge.completed' && payload.data.status === 'failed') {
-      const { tx_ref } = payload.data;
+  } else if (state === 'FAILED') {
+    // Handle failed transactions
+    const tx_ref = api_ref;
       
       await prisma.payment.updateMany({
         where: { txRef: tx_ref },
         data: { 
           status: 'FAILED',
-          gatewayResponse: payload.data
+          gatewayResponse: payload
         }
       });
 
@@ -186,8 +181,10 @@ export const handleWebhook = asyncHandler(async (req: Request, res: Response, ne
       });
 
       logger.info(`Payment failed: ${tx_ref}`);
-    }
-
+      res.status(200).json({ message: 'Payment failed' });
+  } else {
+    // Other states (PENDING, PROCESSING, etc.)
+    logger.info(`Payment status: ${state} for ${api_ref}`);
     res.status(200).json({ message: 'Webhook received' });
   }
 });
