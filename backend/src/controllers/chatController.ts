@@ -57,8 +57,8 @@ export const sendMessage = asyncHandler(async (req: Request, res: Response, next
     }
   }
 
-  // Add user message to log
-  messages.push({
+  // Add user message to log at the beginning (latest first)
+  messages.unshift({
     from: 'user',
     text: message,
     ts: new Date().toISOString()
@@ -67,8 +67,8 @@ export const sendMessage = asyncHandler(async (req: Request, res: Response, next
   // Process message with chatbot
   const botResponse = await chatbotService.processMessage(message, chatContext);
 
-  // Add bot response to log
-  messages.push({
+  // Add bot response to log at the beginning (latest first)
+  messages.unshift({
     from: 'bot',
     text: botResponse.reply,
     ts: new Date().toISOString(),
