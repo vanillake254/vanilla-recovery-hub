@@ -47,22 +47,33 @@ function TrackRequestContent() {
   useEffect(() => {
     if (txRef) {
       fetchRequestDetails();
+      
+      // Auto-refresh messages every 3 seconds
+      const refreshInterval = setInterval(() => {
+        fetchRequestDetails(true); // Pass true to skip loading state
+      }, 3000);
+      
+      // Cleanup on unmount
+      return () => clearInterval(refreshInterval);
     } else {
       toast.error('Transaction reference required');
       setLoading(false);
     }
   }, [txRef]);
 
-  const fetchRequestDetails = async () => {
+  const fetchRequestDetails = async (silent = false) => {
     try {
+      if (!silent) setLoading(true);
       const response = await axios.get(`${API_URL}/api/requests/track/${txRef}`);
       setRequest(response.data.data.request);
       setNotes(response.data.data.notes || []);
     } catch (error: any) {
       console.error('Error fetching request:', error);
-      toast.error(error.response?.data?.message || 'Failed to load request details');
+      if (!silent) {
+        toast.error(error.response?.data?.message || 'Failed to load request details');
+      }
     } finally {
-      setLoading(false);
+      if (!silent) setLoading(false);
     }
   };
 
@@ -80,7 +91,7 @@ function TrackRequestContent() {
       );
       toast.success('Message sent to our team!');
       setMessage('');
-      fetchRequestDetails(); // Refresh to show new note
+      fetchRequestDetails(false); // Refresh immediately after sending
     } catch (error) {
       toast.error('Failed to send message');
       console.error(error);

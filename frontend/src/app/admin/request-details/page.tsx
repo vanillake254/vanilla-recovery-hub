@@ -57,10 +57,22 @@ function RequestDetailsContent() {
       return;
     }
     fetchRequestDetails(token);
+    
+    // Auto-refresh messages every 3 seconds
+    const refreshInterval = setInterval(() => {
+      const currentToken = localStorage.getItem('adminToken');
+      if (currentToken) {
+        fetchRequestDetails(currentToken, true); // Pass true for silent mode
+      }
+    }, 3000);
+    
+    // Cleanup on unmount
+    return () => clearInterval(refreshInterval);
   }, [requestId]);
 
-  const fetchRequestDetails = async (token: string) => {
+  const fetchRequestDetails = async (token: string, silent = false) => {
     try {
+      if (!silent) setLoading(true);
       const response = await axios.get(`${API_URL}/api/admin/requests/${requestId}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
@@ -69,11 +81,13 @@ function RequestDetailsContent() {
       setRequest(requestData);
       setNotes(requestData.notes || []);
     } catch (error) {
-      toast.error('Failed to load request details');
-      console.error('Request details error:', error);
-      router.push('/admin/requests');
+      if (!silent) {
+        toast.error('Failed to load request details');
+        console.error('Request details error:', error);
+        router.push('/admin/requests');
+      }
     } finally {
-      setLoading(false);
+      if (!silent) setLoading(false);
     }
   };
 
@@ -93,7 +107,7 @@ function RequestDetailsContent() {
       );
       toast.success('Message sent to customer!');
       setMessage('');
-      fetchRequestDetails(token!);
+      fetchRequestDetails(token!, false); // Refresh immediately after sending
     } catch (error) {
       toast.error('Failed to send message');
       console.error(error);
