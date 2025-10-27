@@ -260,13 +260,15 @@ class ChatbotService {
 
   /**
    * Get all available intents (for admin management)
+   * Returns intents in reverse order (newest first)
    */
   getAllIntents(): Intent[] {
-    return this.intents;
+    return [...this.intents].reverse();
   }
 
   /**
    * Add new intent (for admin to train bot)
+   * Adds at the end of array (will be shown first when reversed)
    */
   addIntent(intent: Intent): void {
     this.intents.push(intent);

@@ -411,7 +411,14 @@ export default function BotTraining() {
       )}
 
       <div className="card">
-        <h3 className="text-xl font-bold text-gray-900 mb-4">Existing Training Data</h3>
+        <div className="flex items-start justify-between mb-4">
+          <div>
+            <h3 className="text-xl font-bold text-gray-900">Existing Training Data</h3>
+            <p className="text-sm text-gray-600 mt-1">
+              💡 Only custom intents (with "custom" tag) can be edited or deleted. Built-in intents are protected.
+            </p>
+          </div>
+        </div>
         <div className="space-y-4 max-h-96 overflow-y-auto">
           {intents.map((intent, index) => (
             <div key={index} className="border border-gray-200 rounded-lg p-4 hover:border-primary-300 transition-colors">
