@@ -70,6 +70,7 @@ class IntaSendService {
           last_name: payload.name.split(' ')[1] || '',
           api_ref: payload.api_ref,
           redirect_url: payload.redirect_url || process.env.SUCCESS_URL,
+          method: 'M-PESA' // Required field: Payment method
         },
         { headers: getIntaSendHeaders() }
       );
