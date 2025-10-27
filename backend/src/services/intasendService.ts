@@ -1,10 +1,18 @@
 import IntaSend from 'intasend-node';
 import { logger } from '../utils/logger';
 
+// Check if IntaSend credentials are available
+const INTASEND_PUBLISHABLE_KEY = process.env.INTASEND_PUBLISHABLE_KEY || '';
+const INTASEND_SECRET_KEY = process.env.INTASEND_SECRET_KEY || '';
+
+if (!INTASEND_PUBLISHABLE_KEY || !INTASEND_SECRET_KEY) {
+  logger.error('IntaSend API keys not configured! Payment functionality will not work.');
+}
+
 // Initialize IntaSend with live credentials
 const intasend = new IntaSend(
-  process.env.INTASEND_PUBLISHABLE_KEY!,
-  process.env.INTASEND_SECRET_KEY!,
+  INTASEND_PUBLISHABLE_KEY,
+  INTASEND_SECRET_KEY,
   true // true = production/live mode, false = test mode
 );
 
