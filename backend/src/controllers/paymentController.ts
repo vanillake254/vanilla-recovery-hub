@@ -426,6 +426,36 @@ export const migrateTierColumn = asyncHandler(async (req: Request, res: Response
 });
 
 /**
+ * Migrate platform enum - Admin only
+ */
+export const migratePlatformEnum = asyncHandler(async (req: Request, res: Response) => {
+  try {
+    logger.info('Running platform enum migration...');
+    
+    // Add new platform enum values
+    await prisma.$executeRaw`ALTER TYPE "Platform" ADD VALUE IF NOT EXISTS 'SNAPCHAT'`;
+    await prisma.$executeRaw`ALTER TYPE "Platform" ADD VALUE IF NOT EXISTS 'LINKEDIN'`;
+    await prisma.$executeRaw`ALTER TYPE "Platform" ADD VALUE IF NOT EXISTS 'TELEGRAM'`;
+    await prisma.$executeRaw`ALTER TYPE "Platform" ADD VALUE IF NOT EXISTS 'YAHOO'`;
+    await prisma.$executeRaw`ALTER TYPE "Platform" ADD VALUE IF NOT EXISTS 'OUTLOOK'`;
+    
+    logger.info('Platform enum migration completed successfully');
+    
+    res.status(200).json({
+      success: true,
+      message: 'Platform enum values added successfully'
+    });
+  } catch (error: any) {
+    logger.error('Platform enum migration failed:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Migration failed',
+      error: error.message
+    });
+  }
+});
+
+/**
  * Check if user has paid access for premium chat
  */
 export const checkChatAccess = asyncHandler(async (req: Request, res: Response) => {

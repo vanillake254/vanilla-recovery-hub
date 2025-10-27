@@ -63,4 +63,11 @@ router.post('/migrate-tier', paymentController.migrateTierColumn);
  */
 router.post('/fix-pending', paymentController.fixPendingPayments);
 
+/**
+ * @route   POST /api/payments/migrate-platform
+ * @desc    Add new platform enum values
+ * @access  Admin
+ */
+router.post('/migrate-platform', paymentController.migratePlatformEnum);
+
 export default router;
