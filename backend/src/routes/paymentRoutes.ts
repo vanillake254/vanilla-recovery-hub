@@ -49,4 +49,11 @@ router.get('/check-access/:identifier', paymentController.checkChatAccess);
  */
 router.post('/update-pending', paymentController.updatePendingPayments);
 
+/**
+ * @route   POST /api/payments/migrate-tier
+ * @desc    Add tier column to requests table
+ * @access  Admin
+ */
+router.post('/migrate-tier', paymentController.migrateTierColumn);
+
 export default router;

@@ -339,6 +339,34 @@ export const updatePendingPayments = asyncHandler(async (req: Request, res: Resp
 });
 
 /**
+ * Migrate tier column - Admin only
+ */
+export const migrateTierColumn = asyncHandler(async (req: Request, res: Response) => {
+  try {
+    logger.info('Running tier column migration...');
+    
+    // Add tier column if not exists
+    await prisma.$executeRaw`
+      ALTER TABLE "requests" ADD COLUMN IF NOT EXISTS "tier" VARCHAR(20);
+    `;
+    
+    logger.info('Tier column migration completed successfully');
+    
+    res.status(200).json({
+      success: true,
+      message: 'Tier column added successfully'
+    });
+  } catch (error: any) {
+    logger.error('Tier migration failed:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Migration failed',
+      error: error.message
+    });
+  }
+});
+
+/**
  * Check if user has paid access for premium chat
  */
 export const checkChatAccess = asyncHandler(async (req: Request, res: Response) => {
