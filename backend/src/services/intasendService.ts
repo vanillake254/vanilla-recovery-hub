@@ -1,23 +1,30 @@
 import IntaSend from 'intasend-node';
 import { logger } from '../utils/logger';
 
-// Check if IntaSend credentials are available
-const INTASEND_PUBLISHABLE_KEY = process.env.INTASEND_PUBLISHABLE_KEY || '';
-const INTASEND_SECRET_KEY = process.env.INTASEND_SECRET_KEY || '';
+// Lazy initialization - only create IntaSend when needed
+let intasendInstance: any = null;
+let checkoutLinksInstance: any = null;
 
-if (!INTASEND_PUBLISHABLE_KEY || !INTASEND_SECRET_KEY) {
-  logger.error('IntaSend API keys not configured! Payment functionality will not work.');
+function getIntaSend() {
+  if (!intasendInstance) {
+    const INTASEND_PUBLISHABLE_KEY = process.env.INTASEND_PUBLISHABLE_KEY || '';
+    const INTASEND_SECRET_KEY = process.env.INTASEND_SECRET_KEY || '';
+
+    if (!INTASEND_PUBLISHABLE_KEY || !INTASEND_SECRET_KEY) {
+      throw new Error('IntaSend API keys not configured');
+    }
+
+    intasendInstance = new IntaSend(
+      INTASEND_PUBLISHABLE_KEY,
+      INTASEND_SECRET_KEY,
+      true // production mode
+    );
+    checkoutLinksInstance = intasendInstance.checkoutLinks();
+    
+    logger.info('IntaSend initialized successfully');
+  }
+  return { intasend: intasendInstance, checkoutLinks: checkoutLinksInstance };
 }
-
-// Initialize IntaSend with live credentials
-const intasend = new IntaSend(
-  INTASEND_PUBLISHABLE_KEY,
-  INTASEND_SECRET_KEY,
-  true // true = production/live mode, false = test mode
-);
-
-// Get checkout links API
-const checkoutLinks = intasend.checkoutLinks();
 
 interface PaymentPayload {
   amount: number;
@@ -60,6 +67,7 @@ class IntaSendService {
       });
 
       // Create checkout link using IntaSend API
+      const { checkoutLinks } = getIntaSend();
       const response = await checkoutLinks.create({
         amount: payload.amount,
         currency: payload.currency || 'KES',
@@ -97,6 +105,7 @@ class IntaSendService {
       logger.info('Verifying IntaSend payment:', checkoutId);
 
       // Get status using checkout links API
+      const { checkoutLinks } = getIntaSend();
       const status = await checkoutLinks.retrieve(checkoutId);
 
       logger.info('IntaSend payment status:', status);
