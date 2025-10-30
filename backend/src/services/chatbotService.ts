@@ -1,6 +1,7 @@
 import natural from 'natural';
 import { logger } from '../utils/logger';
 import chatbotTrainingData from '../data/chatbot_training_seed.json';
+import prisma from '../lib/prisma';
 
 interface Intent {
   name: string;
@@ -40,8 +41,35 @@ class ChatbotService {
   async initialize(): Promise<void> {
     try {
       logger.info('Initializing chatbot...');
-      
+      // 1) Load seed intents
       this.intents = chatbotTrainingData.intents;
+
+      // 2) Load persisted custom intents from DB (if any)
+      try {
+        const dbIntents = await prisma.botIntent.findMany({
+          orderBy: { createdAt: 'asc' }
+        });
+
+        if (dbIntents.length > 0) {
+          const existingNames = new Set(this.intents.map(i => i.name));
+          for (const dbi of dbIntents) {
+            const intent = {
+              name: dbi.name,
+              patterns: (dbi.patterns as any) as string[],
+              responses: (dbi.responses as any) as string[],
+              tags: (dbi.tags as any) as string[] | undefined,
+              requires_payment: dbi.requiresPayment || false,
+              escalate: dbi.escalate || false
+            } as any;
+            if (!existingNames.has(intent.name)) {
+              this.intents.push(intent);
+            }
+          }
+          logger.info(`Loaded ${dbIntents.length} custom intents from DB`);
+        }
+      } catch (dbErr) {
+        logger.warn('Could not load custom intents from DB (will continue with seed):', dbErr);
+      }
 
       // Train classifier with all intents
       for (const intent of this.intents) {
@@ -280,6 +308,26 @@ class ChatbotService {
     
     this.classifier.train();
     logger.info(`New intent added: ${intent.name}`);
+
+    // Persist to DB (best-effort)
+    prisma.botIntent.upsert({
+      where: { name: intent.name },
+      create: {
+        name: intent.name,
+        patterns: intent.patterns,
+        responses: intent.responses,
+        tags: intent.tags || [],
+        requiresPayment: intent.requires_payment || false,
+        escalate: intent.escalate || false
+      },
+      update: {
+        patterns: intent.patterns,
+        responses: intent.responses,
+        tags: intent.tags || [],
+        requiresPayment: intent.requires_payment || false,
+        escalate: intent.escalate || false
+      }
+    }).catch((e) => logger.warn('Failed to persist bot intent (non-fatal):', e));
   }
 
   /**

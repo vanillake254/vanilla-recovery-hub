@@ -46,7 +46,7 @@ export default function TermsOfService() {
 
             <h2>4. Payment Terms</h2>
             <ul>
-              <li>All payments are processed securely via Flutterwave</li>
+              <li>All payments are processed securely via IntaSend</li>
               <li>Prices are in Kenyan Shillings (KES)</li>
               <li>Payment is required before receiving recovery instructions</li>
               <li>Refunds are subject to our Refund Policy (see below)</li>

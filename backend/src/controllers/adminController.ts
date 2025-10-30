@@ -35,7 +35,7 @@ export const getAllRequests = asyncHandler(async (req: Request, res: Response) =
           }
         }
       },
-      orderBy: { createdAt: 'desc' },
+      orderBy: { createdAt: 'asc' },
       skip,
       take: limit
     }),
@@ -239,7 +239,8 @@ export const getChatSessions = asyncHandler(async (req: Request, res: Response) 
       user: {
         select: {
           name: true,
-          email: true
+          email: true,
+          phone: true
         }
       },
       request: {
@@ -249,13 +250,63 @@ export const getChatSessions = asyncHandler(async (req: Request, res: Response) 
         }
       }
     },
-    orderBy: { updatedAt: 'desc' },
+    orderBy: { createdAt: 'asc' },
     take: 50
   });
 
+  // Map to DTO expected by frontend and filter to sessions that have at least one user message
+  const mapped = sessions
+    .map((s: any) => {
+      const rawMessages = Array.isArray(s.messages) ? s.messages : [];
+      const normalizedMessages = rawMessages.map((m: any) => ({
+        sender: m.sender || m.from || 'bot',
+        message: m.message || m.text || '',
+        timestamp: m.timestamp || m.ts || new Date().toISOString()
+      }));
+
+      const lastMessage = normalizedMessages.length > 0 ? normalizedMessages[0].message : '';
+
+      return {
+        sessionId: s.sessionId,
+        userId: s.userId || undefined,
+        userEmail: s.user?.email || undefined,
+        userPhone: s.user?.phone || undefined,
+        status: (s.status || 'ACTIVE').toString().toLowerCase(),
+        lastMessage,
+        createdAt: s.createdAt,
+        messages: normalizedMessages
+      };
+    })
+    .filter((session) => session.messages.some((m: any) => (m.sender || '').toLowerCase() === 'user'));
+
   res.status(200).json({
     success: true,
-    data: sessions
+    data: mapped
+  });
+});
+
+/**
+ * Resolve a chat session (mark as RESOLVED)
+ */
+export const resolveChatSession = asyncHandler(async (req: Request, res: Response) => {
+  const { sessionId } = req.params;
+
+  const chatLog = await prisma.chatLog.findUnique({ where: { sessionId } });
+  if (!chatLog) {
+    throw new AppError('Chat session not found', 404);
+  }
+
+  const updated = await prisma.chatLog.update({
+    where: { id: chatLog.id },
+    data: { status: 'RESOLVED' }
+  });
+
+  logger.info(`Chat session resolved: ${sessionId}`);
+
+  res.status(200).json({
+    success: true,
+    message: 'Chat session marked as resolved',
+    data: { sessionId: updated.sessionId, status: 'resolved' }
   });
 });
 

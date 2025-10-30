@@ -5,6 +5,21 @@ generator client {
   provider = "prisma-client-js"
 }
 
+// Chatbot training intents persistence
+model BotIntent {
+  id               String   @id @default(cuid())
+  name             String   @unique
+  patterns         Json
+  responses        Json
+  tags             Json?
+  requiresPayment  Boolean? @default(false)
+  escalate         Boolean? @default(false)
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  @@map("bot_intents")
+}
+
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")

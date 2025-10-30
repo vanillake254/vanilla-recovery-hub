@@ -14,14 +14,14 @@ function PaymentSuccessContent() {
   const searchParams = useSearchParams();
   const tx_ref = searchParams.get('tx_ref');
   const transaction_id = searchParams.get('transaction_id');
-  const urlStatus = searchParams.get('status'); // Get status from URL
+  const urlStatus = searchParams.get('status') || searchParams.get('state'); // IntaSend may use state=COMPLETE
   const [verified, setVerified] = useState(false);
   const [loading, setLoading] = useState(true);
   const [retryCount, setRetryCount] = useState(0);
 
   useEffect(() => {
-    // If Flutterwave redirected with successful status, show success immediately
-    if (urlStatus === 'successful') {
+    // If payment provider redirected with success, show success immediately
+    if (urlStatus && ['successful', 'success', 'complete', 'COMPLETE'].includes(urlStatus)) {
       console.log('Payment successful based on URL status parameter');
       setVerified(true);
       setLoading(false);
@@ -130,9 +130,7 @@ function PaymentSuccessContent() {
                 <h1 className="text-4xl font-bold text-gray-900 mb-2">
                   Payment Successful! 🎉
                 </h1>
-                <p className="text-lg text-gray-600">
-                  Your recovery process has officially started
-                </p>
+                <p className="text-lg text-gray-600">Your recovery process has officially started</p>
               </div>
 
               {/* What's Next Card */}
@@ -243,7 +241,7 @@ function PaymentSuccessContent() {
               <div className="card mb-6 border-2 border-yellow-200 bg-yellow-50">
                 <h3 className="font-semibold text-gray-900 mb-3">✅ Good News!</h3>
                 <p className="text-gray-700 mb-4">
-                  Based on your successful redirect from Flutterwave, your payment was likely successful. 
+                  Based on your successful redirect from IntaSend, your payment was likely successful. 
                   Our team will verify it manually if automatic verification is delayed.
                 </p>
                 <div className="space-y-2 text-sm">

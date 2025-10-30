@@ -71,13 +71,13 @@
     {
       "name": "pricing",
       "patterns": ["how much", "what's the price", "cost", "pricing", "how much does it cost", "what do you charge", "fees", "price list", "packages", "plans", "rates"],
-      "responses": ["Our pricing is transparent:\n\n💼 **Basic Recovery**: KES 2,000\n- Email guidance & step-by-step instructions\n- Chat support for questions\n- Security checklist\n\n🔥 **Premium Recovery**: KES 3,000\n- Everything in Basic, PLUS:\n- Priority 12-hour response\n- Done-for-you assistance (with consent)\n- 2FA setup help\n- 7-day follow-up support\n\nWe accept M-Pesa, Visa, and Mastercard via Flutterwave. Ready to start?"],
+      "responses": ["Our pricing is transparent:\n\n💼 **Basic Recovery**: KES 2,000\n- Email guidance & step-by-step instructions\n- Chat support for questions\n- Security checklist\n\n🔥 **Premium Recovery**: KES 3,000\n- Everything in Basic, PLUS:\n- Priority 12-hour response\n- Done-for-you assistance (with consent)\n- 2FA setup help\n- 7-day follow-up support\n\nWe accept M-Pesa, Visa, and Mastercard via IntaSend. Ready to start?"],
       "tags": ["payment", "pricing", "pre_payment"]
     },
     {
       "name": "payment_methods",
       "patterns": ["what payment methods", "how can i pay", "do you accept mpesa", "payment options", "can i use card", "do you take visa", "mastercard accepted", "how to pay"],
-      "responses": ["We accept:\n\n📱 M-Pesa\n💳 Visa & Mastercard\n💳 Credit/Debit cards\n\nAll payments are processed securely through Flutterwave, a trusted payment gateway. Your financial information is never stored on our servers. 🔒"],
+      "responses": ["We accept:\n\n📱 M-Pesa\n💳 Visa & Mastercard\n💳 Credit/Debit cards\n\nAll payments are processed securely through IntaSend, a trusted payment gateway. Your financial information is never stored on our servers. 🔒"],
       "tags": ["payment", "pre_payment"]
     },
     {
@@ -121,7 +121,7 @@
     {
       "name": "privacy_policy",
       "patterns": ["privacy policy", "data privacy", "do you share my data", "is my data safe", "what data do you collect", "gdpr"],
-      "responses": ["Your privacy is our priority:\n\n🔒 **We NEVER:**\n- Ask for passwords\n- Share your data with third parties\n- Sell your information\n- Store payment details (handled by Flutterwave)\n\n✅ **We DO collect:**\n- Name, email, phone (for service delivery)\n- Chat logs (to improve support)\n- Payment status (not card details)\n\nFull privacy policy: vanillarecoveryhub.com/privacy"],
+      "responses": ["Your privacy is our priority:\n\n🔒 **We NEVER:**\n- Ask for passwords\n- Share your data with third parties\n- Sell your information\n- Store payment details (handled by IntaSend)\n\n✅ **We DO collect:**\n- Name, email, phone (for service delivery)\n- Chat logs (to improve support)\n- Payment status (not card details)\n\nFull privacy policy: vanillarecoveryhub.com/privacy"],
       "tags": ["privacy", "policy", "gdpr"]
     },
     {

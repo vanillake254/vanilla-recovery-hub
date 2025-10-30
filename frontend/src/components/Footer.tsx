@@ -92,7 +92,7 @@ export default function Footer() {
             © {new Date().getFullYear()} Vanilla Recovery Hub. All rights reserved.
           </p>
           <p className="text-gray-500 mt-4 md:mt-0">
-            🔒 Secured by Flutterwave | Made with ❤️ in Kenya | Powered by{' '}
+            🔒 Secured by IntaSend | Made with ❤️ in Kenya | Powered by{' '}
             <a 
               href="https://vanillasoftwares.web.app/" 
               target="_blank" 

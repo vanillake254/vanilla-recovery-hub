@@ -14,7 +14,7 @@ export const metadata: Metadata = {
     default: 'Vanilla Recovery Hub - 95% Success Rate - Account Recovery Kenya',
     template: '%s | Vanilla Recovery Hub'
   },
-  description: '🔒 Recover your hacked account! Professional recovery for Instagram, Facebook, Gmail, TikTok & more. 95% success rate ✓ 500+ recovered ✓ Secure payment via Flutterwave. From KES 2,000.',
+  description: '🔒 Recover your hacked account! Professional recovery for Instagram, Facebook, Gmail, TikTok & more. 95% success rate ✓ 500+ recovered ✓ Secure payment via IntaSend. From KES 2,000.',
   keywords: [
     'account recovery Kenya',
     'hacked account recovery',
@@ -35,7 +35,7 @@ export const metadata: Metadata = {
     'Twitter recovery',
     'account recovery expert',
     'Kenya account recovery service',
-    'Flutterwave secure payment'
+    'IntaSend secure payment'
   ],
   authors: [{ name: 'Vanilla Recovery Hub' }],
   creator: 'Vanilla Recovery Hub',
@@ -75,7 +75,7 @@ export const metadata: Metadata = {
     locale: 'en_KE',
     url: 'https://vanillarecoveryhub.web.app',
     title: 'Vanilla Recovery Hub - 95% Success Rate ✓ Recover Your Hacked Account',
-    description: '🔒 Professional account recovery for Instagram, Facebook, Gmail & more. 95% success rate ✓ 500+ accounts recovered ✓ From KES 2,000 ✓ Secure payment via Flutterwave.',
+    description: '🔒 Professional account recovery for Instagram, Facebook, Gmail & more. 95% success rate ✓ 500+ accounts recovered ✓ From KES 2,000 ✓ Secure payment via IntaSend.',
     siteName: 'Vanilla Recovery Hub',
     images: [
       {

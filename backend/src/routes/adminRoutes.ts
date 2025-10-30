@@ -71,6 +71,7 @@ router.put(
  * @access  Admin
  */
 router.get('/chat/sessions', adminController.getChatSessions);
+router.put('/chat/resolve/:sessionId', adminController.resolveChatSession);
 
 /**
  * @route   POST /api/admin/chat/reply

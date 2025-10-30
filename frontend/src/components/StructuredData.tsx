@@ -123,7 +123,7 @@ export default function StructuredData() {
         "name": "Is payment secure?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "Yes, all payments are processed securely through Flutterwave, a certified payment processor. We support M-PESA, cards, and bank transfers."
+          "text": "Yes, all payments are processed securely through IntaSend, a certified payment processor. We support M-PESA, cards, and bank transfers."
         }
       },
       {

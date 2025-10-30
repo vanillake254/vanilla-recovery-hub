@@ -14,7 +14,7 @@ const faqs = [
   },
   {
     question: 'What payment methods do you accept?',
-    answer: 'We accept M-Pesa, Visa, Mastercard, and all major credit/debit cards. All payments are processed securely through Flutterwave. Your financial information is never stored on our servers.',
+    answer: 'We accept M-Pesa, Visa, Mastercard, and all major credit/debit cards. All payments are processed securely through IntaSend. Your financial information is never stored on our servers.',
   },
   {
     question: 'What if my account can\'t be recovered?',
@@ -26,7 +26,7 @@ const faqs = [
   },
   {
     question: 'Is my data safe with you?',
-    answer: 'Yes! We never ask for passwords, never share your data with third parties, and never sell your information. Payment details are handled securely by Flutterwave. We only collect your name, email, and phone for service delivery.',
+    answer: 'Yes! We never ask for passwords, never share your data with third parties, and never sell your information. Payment details are handled securely by IntaSend. We only collect your name, email, and phone for service delivery.',
   },
   {
     question: 'What\'s the difference between Basic and Premium?',

@@ -459,7 +459,7 @@ function RecoverPageContent() {
 
                     <p className="text-xs text-gray-500 text-center">
                       By proceeding, you agree to our Terms of Service and Privacy Policy.
-                      Payment is processed securely via Flutterwave.
+                      Payment is processed securely via IntaSend.
                     </p>
                   </form>
                 </div>

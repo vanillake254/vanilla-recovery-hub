@@ -24,7 +24,7 @@ export default function PrivacyPolicy() {
             <ul>
               <li><strong>Personal Information:</strong> Name, email address, phone number</li>
               <li><strong>Recovery Details:</strong> Platform information, account description</li>
-              <li><strong>Payment Information:</strong> Processed securely by Flutterwave (we don't store card details)</li>
+              <li><strong>Payment Information:</strong> Processed securely by IntaSend (we don't store card details)</li>
               <li><strong>Chat Logs:</strong> Conversations with our chatbot for support purposes</li>
             </ul>
 
@@ -42,7 +42,7 @@ export default function PrivacyPolicy() {
             <h2>3. Information Sharing</h2>
             <p>We DO NOT sell or share your personal information with third parties, except:</p>
             <ul>
-              <li><strong>Payment Processor:</strong> Flutterwave processes payments securely</li>
+              <li><strong>Payment Processor:</strong> IntaSend processes payments securely</li>
               <li><strong>Email Service:</strong> Resend sends transactional emails</li>
               <li><strong>Legal Requirements:</strong> When required by law</li>
             </ul>
